@@ -1,0 +1,12 @@
+__pycache__
+*.pyc
+*.pyo
+.DS_Store
+.git
+.gitignore
+.claude
+*.zip
+*.md
+data/
+logs/
+参考代码/

@@ -1,0 +1,81 @@
+{
+  "task_id": "c2fb7d2c",
+  "user_id": "u1767923958522",
+  "product_id": "p1767923958522",
+  "total": 10,
+  "success": 10,
+  "failed": 0,
+  "results": [
+    {
+      "name": "海报01 - 主KV视觉",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报01_-_主KV视觉.jpg"
+      ]
+    },
+    {
+      "name": "海报02 - 生活场景",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报02_-_生活场景.jpg"
+      ]
+    },
+    {
+      "name": "海报03 - 概念可视化",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报03_-_概念可视化.jpg"
+      ]
+    },
+    {
+      "name": "海报04 - 细节特写01",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报04_-_细节特写01.jpg"
+      ]
+    },
+    {
+      "name": "海报05 - 细节特写02",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报05_-_细节特写02.jpg"
+      ]
+    },
+    {
+      "name": "海报06 - 细节特写03",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报06_-_细节特写03.jpg"
+      ]
+    },
+    {
+      "name": "海报07 - 细节特写04 / 风味",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报07_-_细节特写04___风味.jpg"
+      ]
+    },
+    {
+      "name": "海报08 - 品牌故事/配色灵感",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报08_-_品牌故事_配色灵感.jpg"
+      ]
+    },
+    {
+      "name": "海报09 - 产品参数",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报09_-_产品参数.jpg"
+      ]
+    },
+    {
+      "name": "海报10 - 使用指南",
+      "success": true,
+      "files": [
+        "/Users/plini/Documents/项目/17、电商广告生成/V0.12/poster-generator/data/outputs/u1767923958522/p1767923958522/海报10_-_使用指南.jpg"
+      ]
+    }
+  ],
+  "completed_at": "2026-01-09T10:02:45.044429"
+}

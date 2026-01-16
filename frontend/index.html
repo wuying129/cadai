@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>品牌视觉工坊 | 高端 AI 生成</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Noto+Serif+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#F9F7F2', 'paper-light': '#FFFEFA', 'ink': '#2C2420', 'ink-light': '#585350',
+                        'gold': '#C68E5D', 'gold-dim': '#AB7F55', 'sage': '#8DA399', 'stone': '#E5E0D8',
+                    },
+                    fontFamily: { serif: ['"Noto Serif SC"', '"Playfair Display"', 'serif'], sans: ['"Lato"', 'sans-serif'], },
+                    boxShadow: { 'layer': '0 10px 30px -10px rgba(44, 36, 32, 0.08)', 'float': '0 20px 40px -10px rgba(44, 36, 32, 0.15)', 'glow': '0 0 20px rgba(198, 142, 93, 0.3)', },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Lato', sans-serif; background-color: #F9F7F2; color: #2C2420; overflow-x: hidden; }
+        .bg-noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .blob-bg { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.4; animation: blob 10s infinite; }
+        @keyframes blob { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-50px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.8s ease-out forwards; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #D1CDC7; border-radius: 3px; }
+        .drip-loader { width: 4px; height: 40px; background: #C68E5D; margin: 0 auto; position: relative; animation: drip 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        .drip-loader::after { content: ''; position: absolute; bottom: -10px; left: -8px; width: 20px; height: 20px; background: #C68E5D; border-radius: 50%; opacity: 0; animation: splash 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        @keyframes drip { 0% { height: 0; opacity: 0; transform: translateY(-20px); } 30% { height: 40px; opacity: 1; transform: translateY(0); } 80%,100% { height: 0; opacity: 0; transform: translateY(20px); } }
+        @keyframes splash { 0%,75% { transform: scale(0); opacity: 0; } 80% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
+        @keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 20%,100% { transform: translateX(200%) rotate(45deg); } }
+        .animate-shine { animation: shine 3s infinite linear; }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; } .fade-enter-from, .fade-leave-to { opacity: 0; }
+        .stagger-enter-active, .stagger-leave-active { transition: all 0.5s ease; } .stagger-enter-from, .stagger-leave-to { opacity: 0; transform: translateY(20px); }
+        [v-cloak] { display: none; }
+        .stage-dot.active { transform: scale(1.3); box-shadow: 0 0 12px rgba(198, 142, 93, 0.6); }
+        .stage-dot.completed { background-color: #8DA399 !important; border-color: #8DA399 !important; }
+        .download-btn { transition: all 0.3s; } .download-btn:hover { transform: translateY(-2px); }
+        .download-toast { animation: toastIn 0.3s ease-out; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(10px) translateX(-50%); } to { opacity: 1; transform: translateY(0) translateX(-50%); } }
+
+        /* 灵感光环动画样式 */
+        .aura-ring {
+            border: 1px solid rgba(198, 142, 93, 0.3);
+            border-top-color: #C68E5D;
+            border-radius: 50%;
+            animation: auraSpin 3s linear infinite;
+        }
+        .aura-inner {
+            background: radial-gradient(circle, rgba(198, 142, 93, 0.2) 0%, rgba(249, 247, 242, 0) 70%);
+            animation: breathe 4s ease-in-out infinite;
+        }
+        @keyframes auraSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .text-shimmer {
+            background: linear-gradient(90deg, #2C2420 0%, #C68E5D 50%, #2C2420 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        .progress-glow {
+            box-shadow: 0 0 10px rgba(198, 142, 93, 0.5);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="bg-noise"></div>
+    <div class="blob-bg w-96 h-96 bg-gold/20 -top-[10%] -left-[10%]"></div>
+    <div class="blob-bg w-80 h-80 bg-stone/50 bottom-[10%] -right-[5%]"></div>
+
+    <div id="app" v-cloak class="relative z-10 min-h-screen flex flex-col">
+        <header class="sticky top-0 z-50 backdrop-blur-md bg-paper/80 border-b border-stone/50">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                <div class="w-24">
+                    <button v-if="step !== 1" @click="showResetModal = true" class="group flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-ink-light hover:text-gold transition-colors">
+                        <span class="w-8 h-[1px] bg-ink-light group-hover:bg-gold transition-colors"></span>返回
+                    </button>
+                    <div v-else class="w-8 h-8 rounded-full border border-stone flex items-center justify-center"><i class="fas fa-bars text-ink-light text-xs"></i></div>
+                </div>
+                <h1 class="font-serif text-2xl text-ink font-bold italic">Atelier<span class="text-gold">.</span>AI</h1>
+                <div class="w-24 text-right flex items-center justify-end gap-2">
+                    <span class="text-xs text-ink-light">{{ apiStatus }}</span>
+                    <div :class="isApiOnline ? 'bg-green-500' : 'bg-red-500'" class="w-2 h-2 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow flex flex-col items-center justify-center p-6 relative">
+            <!-- Step 1 -->
+            <transition name="stagger">
+                <div v-if="step === 1" class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-start animate-fade-up">
+                    <div class="lg:col-span-5 space-y-8">
+                        <div>
+                            <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">01. 需求简报</span>
+                            <h2 class="font-serif text-4xl text-ink leading-tight mb-4">产品说明</h2>
+                            <p class="text-ink-light font-light text-sm leading-relaxed">每一个伟大的品牌都是一个故事。请告诉我们您的产品哲学、核心工艺以及您希望触达的情感共鸣。</p>
+                        </div>
+                        <div class="relative group">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-stone to-white rounded-lg opacity-50 blur group-hover:opacity-75 transition duration-500"></div>
+                            <div class="relative bg-paper-light border border-stone rounded-lg p-1 shadow-layer focus-within:ring-1 focus-within:ring-gold/50 transition-all">
+                                <textarea v-model="productDesc" rows="8" class="w-full bg-transparent border-none p-4 text-ink placeholder-stone/80 focus:ring-0 resize-none font-serif text-lg leading-relaxed outline-none" placeholder="例如：这不仅是一个咖啡杯，更是清晨冥想的容器。采用粗陶手作..."></textarea>
+                                <div class="absolute bottom-4 right-4 text-[10px] text-gold/60 font-bold tracking-widest flex items-center gap-1"><i class="fas fa-magic"></i> AI 写作助手就绪</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-7 flex flex-col justify-between h-full space-y-8">
+                        <div>
+                            <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">02. 视觉素材</span>
+                            <div class="flex justify-between items-end mb-6">
+                                <h2 class="font-serif text-3xl text-ink">产品细节图</h2>
+                                <span class="text-xs text-ink-light bg-stone/30 px-2 py-1 rounded">已选 {{ uploadedImages.length }} / 9</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div v-if="uploadedImages.length < 9" @click="$refs.fileInput.click()" class="aspect-[3/4] border border-dashed border-gold/40 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gold/5 transition-all group hover:border-gold">
+                                    <div class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-gold group-hover:text-white transition-all"><i class="fas fa-plus text-xs"></i></div>
+                                    <span class="text-[10px] text-ink-light tracking-widest uppercase group-hover:text-gold">添加图片</span>
+                                    <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" multiple class="hidden">
+                                </div>
+                                <div v-for="(img, idx) in uploadedImages" :key="img.id" class="relative group aspect-[3/4]">
+                                    <div class="absolute inset-0 bg-white p-2 pb-6 shadow-layer rotate-1 group-hover:rotate-0 transition-transform duration-300 rounded-sm">
+                                        <img :src="img.preview" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                                    </div>
+                                    <button @click="uploadedImages.splice(idx, 1)" class="absolute -top-2 -right-2 bg-ink text-white w-6 h-6 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 hover:bg-red-500 transition-all z-10 shadow-lg"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-8 border-t border-stone/50 flex items-center justify-between">
+                            <div class="text-xs text-ink-light font-light flex items-center"><i class="fas fa-check-circle text-gold mr-2"></i> 工作室级输出标准</div>
+                            <button @click="startGeneration" :disabled="!canSubmit" :class="canSubmit ? 'bg-ink text-white hover:bg-gold hover:shadow-glow active:scale-95' : 'bg-stone text-white cursor-not-allowed'" class="relative overflow-hidden group px-8 py-4 rounded-lg font-bold tracking-widest text-xs uppercase transition-all flex items-center gap-3">
+                                <span class="relative z-10 flex items-center gap-3">开始创作 <i class="fas fa-long-arrow-alt-right group-hover:translate-x-1 transition-transform"></i></span>
+                                <div v-if="canSubmit" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] blur-sm animate-shine"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+
+            <!-- Step 2 -->
+            <transition name="stagger">
+                <div v-if="step === 2" class="w-full h-[70vh] flex flex-col items-center justify-center relative z-20">
+
+                    <div class="relative w-64 h-64 mb-12 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-gold/5 rounded-full blur-3xl animate-pulse"></div>
+
+                        <div class="absolute inset-0 aura-ring border-[1px] opacity-60" style="animation-duration: 8s;"></div>
+                        <div class="absolute inset-4 aura-ring border-[1px] opacity-80" style="animation-direction: reverse; animation-duration: 5s;"></div>
+
+                        <div class="w-32 h-32 rounded-full aura-inner flex items-center justify-center backdrop-blur-sm relative z-10">
+                            <span class="font-serif text-4xl text-gold italic">{{ taskProgress }}<span class="text-base not-italic ml-1">%</span></span>
+                        </div>
+
+                        <div class="absolute top-0 left-1/2 w-1 h-1 bg-gold rounded-full animate-ping"></div>
+                        <div class="absolute bottom-10 right-10 w-1.5 h-1.5 bg-ink/20 rounded-full animate-pulse"></div>
+                    </div>
+
+                    <div class="text-center space-y-4 max-w-lg mx-auto px-6">
+                        <h2 class="font-serif text-3xl md:text-4xl text-shimmer font-bold tracking-wide">
+                            {{ currentStageName }}
+                        </h2>
+
+                        <transition mode="out-in" name="fade">
+                            <p :key="taskMessage" class="text-ink-light/80 text-sm font-light tracking-widest uppercase h-6">
+                                {{ taskMessage || '正在调配视觉元素...' }}
+                            </p>
+                        </transition>
+                    </div>
+
+                    <div class="w-64 md:w-96 mt-10 relative">
+                        <div class="h-[2px] w-full bg-stone/30 rounded-full overflow-hidden">
+                            <div class="h-full bg-gold progress-glow transition-all duration-700 ease-out"
+                                 :style="{ width: taskProgress + '%' }">
+                            </div>
+                        </div>
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-1 bg-stone rounded-full"></div>
+                        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-1 bg-stone rounded-full"></div>
+                    </div>
+
+                    <transition name="fade">
+                        <div v-if="taskError" class="absolute bottom-10 bg-red-50/90 backdrop-blur border border-red-200 px-6 py-4 rounded-lg shadow-float text-center">
+                            <p class="text-red-800 font-serif mb-2">创作遇到了阻碍</p>
+                            <p class="text-xs text-red-600 mb-3">{{ taskError }}</p>
+                            <button @click="confirmReset" class="text-xs border-b border-red-400 text-red-700 hover:text-red-900 pb-0.5">重置画布</button>
+                        </div>
+                    </transition>
+
+                </div>
+            </transition>
+
+            <!-- Step 3 -->
+            <transition name="stagger">
+                <div v-if="step === 3" class="w-full max-w-7xl">
+                    <div class="flex flex-col md:flex-row items-end justify-between mb-16 px-4 border-b border-ink/10 pb-8">
+                        <div>
+                            <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">系列就绪</span>
+                            <h2 class="font-serif text-5xl text-ink">{{ projectName }}</h2>
+                            <p class="text-ink-light text-sm mt-2">成功生成 {{ generatedPosters.length }} 张海报</p>
+                        </div>
+                        <div class="flex gap-4 mt-6 md:mt-0">
+                            <button @click="showResetModal = true" class="px-6 py-3 border border-stone rounded hover:border-gold hover:text-gold transition-all text-xs font-bold tracking-widest uppercase">新建项目</button>
+                            <button @click="downloadAll" class="px-6 py-3 bg-ink text-white rounded shadow-layer hover:bg-gold hover:shadow-glow transition-all text-xs font-bold tracking-widest uppercase flex items-center gap-2"><i class="fas fa-download"></i> 下载全部</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+                        <div v-for="(poster, index) in sortedPosters" :key="poster.id" class="group cursor-pointer animate-fade-up" :style="{ animationDelay: index * 100 + 'ms' }">
+                            <div class="relative bg-white p-3 pb-8 shadow-layer hover:shadow-float transition-all duration-500 transform group-hover:-translate-y-2 group-hover:ring-1 group-hover:ring-gold/20">
+                                <div class="relative overflow-hidden bg-stone/10 aspect-[3/4] mb-4" @click="viewImage(poster)">
+                                    <img :src="poster.url" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                                    <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center scale-50 group-hover:scale-100 transition-transform hover:text-gold"><i class="fas fa-expand-alt text-ink"></i></div>
+                                    </div>
+                                </div>
+                                <div class="px-2">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-[10px] text-stone font-bold border border-stone px-1 rounded">{{ poster.number }}</span>
+                                        <button @click.stop="downloadPoster(poster)" class="download-btn flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold text-ink-light hover:text-white hover:bg-gold transition-all"><i class="fas fa-arrow-down text-[8px]"></i><span class="hidden sm:inline">下载</span></button>
+                                    </div>
+                                    <h3 class="font-serif text-xl text-ink leading-none mb-1">{{ poster.mainTitle }}</h3>
+                                    <p class="text-[10px] text-gold font-bold tracking-widest uppercase">{{ poster.subTitle }}</p>
+                                </div>
+                                <transition name="fade"><div v-if="poster.showDownloadToast" class="download-toast absolute bottom-2 left-1/2 -translate-x-1/2 bg-ink text-white text-[10px] px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg"><i class="fas fa-check-circle text-green-400"></i>已开始下载</div></transition>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-20"></div>
+                </div>
+            </transition>
+        </main>
+
+        <!-- Reset Modal -->
+        <transition name="fade">
+            <div v-if="showResetModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-ink/60 backdrop-blur-sm" @click.self="showResetModal = false">
+                <div class="bg-paper-light rounded-xl shadow-float max-w-md w-full mx-6 overflow-hidden">
+                    <div class="h-1 bg-gradient-to-r from-gold via-gold-dim to-gold"></div>
+                    <div class="p-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gold/10 flex items-center justify-center"><i class="fas fa-exclamation-triangle text-gold text-2xl"></i></div>
+                        <h3 class="font-serif text-2xl text-ink mb-3">确定要返回吗？</h3>
+                        <p class="text-ink-light text-sm mb-8">返回将开启新的创作会话，当前内容将丢失。</p>
+                        <div class="flex gap-4">
+                            <button @click="showResetModal = false" class="flex-1 px-6 py-3 border border-stone rounded-lg text-ink font-bold text-sm hover:border-ink transition-all">取消</button>
+                            <button @click="confirmReset" class="flex-1 px-6 py-3 bg-gold text-white rounded-lg font-bold text-sm hover:bg-gold-dim transition-all flex items-center justify-center gap-2"><i class="fas fa-check"></i>确认返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+
+        <!-- Lightbox -->
+        <transition name="fade">
+            <div v-if="lightbox.isOpen" class="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 backdrop-blur-sm" @click.self="closeLightbox">
+                <button @click="closeLightbox" class="absolute top-6 right-6 text-white/50 hover:text-white hover:rotate-90 transition-all text-2xl z-50"><i class="fas fa-times"></i></button>
+                <button @click="downloadPoster(lightbox.currentImage)" class="absolute top-6 left-6 px-4 py-2 bg-white/10 hover:bg-gold text-white rounded-lg text-xs font-bold uppercase transition-all z-50"><i class="fas fa-download mr-2"></i>下载</button>
+                <div class="bg-white p-2 shadow-2xl max-w-[90vw] max-h-[90vh]">
+                    <img :src="lightbox.currentImage?.url" class="max-w-full max-h-[85vh] object-contain">
+                    <div class="pt-4 pb-2 text-center"><h3 class="font-serif text-xl text-ink">{{ lightbox.currentImage?.title }}</h3></div>
+                </div>
+            </div>
+        </transition>
+    </div>
+
+    <script>
+    const { createApp } = Vue;
+    const API = '';
+    createApp({
+        data: () => ({
+            step: 1, productDesc: '', uploadedImages: [], isApiOnline: false, apiStatus: '检查中',
+            userId: 'u' + Date.now(), productId: 'p' + Date.now(),
+            taskId: null, taskStatus: 'pending', taskProgress: 0, taskMessage: '', taskError: null,
+            stages: [{ name: '上传素材' }, { name: '分析产品' }, { name: '生成设计' }, { name: '生成海报' }, { name: '完成' }],
+            logs: [], showLogs: false, projectName: '品牌视觉系列', generatedPosters: [],
+            showResetModal: false, lightbox: { isOpen: false, currentImage: null }, poll: null
+        }),
+        computed: {
+            canSubmit() { return this.productDesc && this.uploadedImages.length; },
+            currentStageIndex() { return { pending: 0, uploading: 0, processing: 1, design_complete: 2, generating: 3, completed: 4 }[this.taskStatus] || 0; },
+            currentStageName() { return { pending: '准备中...', uploading: '正在上传素材...', processing: '正在萃取灵感精华...', design_complete: '正在构思视觉语言...', generating: '正在绘制海报作品...', completed: '创作完成！', failed: '创作失败' }[this.taskStatus]; },
+            sortedPosters() { return [...this.generatedPosters].sort((a, b) => parseInt(a.number) - parseInt(b.number)); }
+        },
+        methods: {
+            log(m) { this.logs.push({ time: new Date().toTimeString().slice(0, 8), message: m }); },
+            async checkApi() { try { const r = await fetch(API + '/health'); this.isApiOnline = r.ok; this.apiStatus = r.ok ? '在线' : '离线'; } catch { this.isApiOnline = false; this.apiStatus = '离线'; } },
+            handleFileChange(e) {
+                Array.from(e.target.files).slice(0, 9 - this.uploadedImages.length).forEach(f => {
+                    const r = new FileReader(); r.onload = ev => this.uploadedImages.push({ id: Date.now() + Math.random(), file: f, preview: ev.target.result }); r.readAsDataURL(f);
+                }); e.target.value = '';
+            },
+            async startGeneration() {
+                if (!this.canSubmit) return;
+                this.step = 2; this.taskStatus = 'uploading'; this.taskProgress = 0; this.taskError = null; this.logs = []; this.log('开始');
+                try {
+                    const fd = new FormData(); fd.append('user_id', this.userId); fd.append('product_id', this.productId);
+                    this.uploadedImages.forEach(i => fd.append('files', i.file));
+                    const up = await fetch(API + '/api/upload-images', { method: 'POST', body: fd });
+                    if (!up.ok) throw new Error('上传失败');
+                    this.log('上传完成'); this.taskProgress = 10; this.taskStatus = 'processing';
+                    const gen = await fetch(API + '/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: this.userId, product_id: this.productId, product_description: this.productDesc }) });
+                    if (!gen.ok) throw new Error((await gen.json()).detail || '任务失败');
+                    const d = await gen.json(); this.taskId = d.task_id; this.log('任务: ' + this.taskId);
+                    this.poll = setInterval(() => this.checkTask(), 2000);
+                } catch (e) { this.log('错误: ' + e.message); this.taskError = e.message; this.taskStatus = 'failed'; }
+            },
+            async checkTask() {
+                if (!this.taskId) return;
+                try {
+                    const r = await fetch(API + '/api/task/' + this.taskId); if (!r.ok) return;
+                    const t = await r.json(); if (t.status !== this.taskStatus) this.log(t.message);
+                    this.taskStatus = t.status; this.taskProgress = t.progress; this.taskMessage = t.message;
+                    if (t.status === 'completed') { clearInterval(this.poll); this.loadPosters(); }
+                    if (t.status === 'failed') { clearInterval(this.poll); this.taskError = t.error; }
+                } catch {}
+            },
+            async loadPosters() {
+                const r = await fetch(API + '/api/posters/' + this.userId + '/' + this.productId);
+                const d = await r.json();
+                this.generatedPosters = d.posters.map((p, i) => {
+                    const m = p.name.match(/海报(\d+)/); const num = m ? m[1].padStart(2, '0') : String(i + 1).padStart(2, '0');
+                    const parts = p.name.replace(/海报\d+/, '').split(/[-_]/);
+                    return { id: i, number: num, title: p.name, mainTitle: '海报' + num, subTitle: parts.filter(x => x.trim()).join(' '), filename: p.filename, url: API + p.url, showDownloadToast: false };
+                });
+                this.projectName = '品牌视觉系列 · ' + new Date().getFullYear(); this.step = 3;
+            },
+            viewImage(p) { this.lightbox = { isOpen: true, currentImage: p }; document.body.style.overflow = 'hidden'; },
+            closeLightbox() { this.lightbox.isOpen = false; document.body.style.overflow = ''; },
+            async downloadPoster(p) {
+                try {
+                    const r = await fetch(p.url); const b = await r.blob(); const a = document.createElement('a');
+                    a.href = URL.createObjectURL(b); a.download = p.filename || `poster_${p.number}.jpg`; a.click();
+                    p.showDownloadToast = true; setTimeout(() => p.showDownloadToast = false, 2000);
+                } catch { alert('下载失败'); }
+            },
+            async downloadAll() { for (const p of this.sortedPosters) { await this.downloadPoster(p); await new Promise(r => setTimeout(r, 300)); } },
+            confirmReset() { this.showResetModal = false; clearInterval(this.poll); Object.assign(this.$data, { step: 1, productDesc: '', uploadedImages: [], taskId: null, taskStatus: 'pending', taskProgress: 0, taskMessage: '', taskError: null, logs: [], generatedPosters: [], showResetModal: false, lightbox: { isOpen: false, currentImage: null } }); this.userId = 'u' + Date.now(); this.productId = 'p' + Date.now(); }
+        },
+        mounted() { this.checkApi(); setInterval(() => this.checkApi(), 30000); window.addEventListener('keydown', e => { if (e.key === 'Escape') { if (this.lightbox.isOpen) this.closeLightbox(); else if (this.showResetModal) this.showResetModal = false; } }); }
+    }).mount('#app');
+    </script>
+</body>
+</html>
