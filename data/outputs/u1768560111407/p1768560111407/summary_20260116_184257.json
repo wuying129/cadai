@@ -1,0 +1,81 @@
+{
+  "task_id": "f09f9588",
+  "user_id": "u1768560111407",
+  "product_id": "p1768560111407",
+  "total": 10,
+  "success": 10,
+  "failed": 0,
+  "results": [
+    {
+      "name": "海报01 - 主KV视觉",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报01_-_主KV视觉.jpg"
+      ]
+    },
+    {
+      "name": "海报02 - 生活场景",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报02_-_生活场景.jpg"
+      ]
+    },
+    {
+      "name": "海报03 - 工艺/技术可视化",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报03_-_工艺_技术可视化.jpg"
+      ]
+    },
+    {
+      "name": "海报04 - 细节特写01",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报04_-_细节特写01.jpg"
+      ]
+    },
+    {
+      "name": "海报05 - 细节特写02",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报05_-_细节特写02.jpg"
+      ]
+    },
+    {
+      "name": "海报06 - 细节特写03",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报06_-_细节特写03.jpg"
+      ]
+    },
+    {
+      "name": "海报07 - 用户评价",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报07_-_用户评价.jpg"
+      ]
+    },
+    {
+      "name": "海报08 - 配色灵感",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报08_-_配色灵感.jpg"
+      ]
+    },
+    {
+      "name": "海报09 - 产品参数",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报09_-_产品参数.jpg"
+      ]
+    },
+    {
+      "name": "海报10 - 使用指南",
+      "success": true,
+      "files": [
+        "/Users/edy/Desktop/归档 4/data/outputs/u1768560111407/p1768560111407/海报10_-_使用指南.jpg"
+      ]
+    }
+  ],
+  "completed_at": "2026-01-16T18:42:57.107121"
+}

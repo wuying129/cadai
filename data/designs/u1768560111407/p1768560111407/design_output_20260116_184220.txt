@@ -1,0 +1,124 @@
+根据您上传的产品图片，我为您生成了这套完整的电商KV视觉系统提示词。该产品具有极强的优雅感和实用性，因此我选择了最能体现质感的“杂志编辑风格”进行设计。
+
+---
+
+### 第一步：产品信息智能提取
+
+**【识别报告】**
+*   **品牌名称：** 待定（建议：雅蔓 / YAMANNE）
+*   **产品类型：** 服饰配件 - 多功能流苏披肩围巾
+*   **产品规格：** 均码 (Free Size) / 仿羊绒质感
+*   **核心卖点：** 
+    1. 一物多穿 - MULTI-WAY WEAR（既是披肩也是围巾）
+    2. 亲肤软糯 - SKIN-FRIENDLY SOFTNESS（细腻仿羊绒触感）
+    3. 垂顺流苏 - ELEGANT TASSELS（底部手工感长流苏设计）
+    4. 暖冬色系 - WARM WINTER COLORS（经典大地色，百搭显白）
+    5. 显瘦廓形 - SLIM-FIT SILHOUETTE（修饰肩颈线条）
+*   **主色调：** 燕麦色/奶茶色 (#D2B48C) + 暖米色 (#F5F5DC)
+*   **辅助色：** 原木色 (#DEB887)、极简白 (#FFFFFF)
+*   **设计风格：** 简约法式、都市极简、静奢风 (Quiet Luxury)
+*   **目标受众：** 25-45岁追求生活品质的都市女性，注重穿搭实用性与高级感。
+*   **品牌调性：** 优雅、温暖、从容、高质感。
+*   **包装亮点：** 极简无领挂装结构，底部均匀流苏。
+
+---
+
+### 第二步：视觉风格选择
+**AI推荐风格：** 
+**☑ 杂志编辑风格**（高级、专业、大片感、粗衬线标题、极简留白）
+*依据：* 披肩类产品需要大面积的留白来体现材质的轻盈与垂坠感，杂志风的网格排版能瞬间提升单品的“身价感”。
+
+---
+
+### 第三步：文字排版效果选择
+**AI推荐效果：**
+**☑ 粗衬线大标题 + 细线装饰 + 网格对齐（杂志风）**
+*排版格式：* 采用**格式A（中英堆叠）**。中文使用宋体类衬线字，英文使用经典无衬线字。
+
+---
+
+### 第四步：生成完整提示词系统
+
+#### LOGO生成提示词
+*   **提示词：** 极简主义LOGO设计，品牌名“YAMANNE 雅蔓”，上方是一个抽象的丝绸弧线图标，代表披肩的柔美，下方是品牌名。黑金配色，衬线字体，矢量图形，白色背景。
+*   **Prompt:** Minimalist LOGO design, brand name "YAMANNE", abstract silk arc icon above representing the elegance of a shawl, serif font, vector, black and gold, white background.
+
+---
+
+#### 海报01 - 主KV视觉 (Hero Shot)
+*   **排版说明：** 产品居中，严格还原图片中的燕麦色披肩及流苏细节。左上角LOGO。
+*   **中英文内容：** 
+    *   标题：冬日暖意 WINTER WARMTH（中上大字）
+    *   副标题：多功能流苏披肩 / Multi-functional Tassel Shawl（下方小字）
+*   **Prompt:** (Masterpiece, photorealistic), high-end e-commerce photography, a high-quality oatmeal-colored fringe shawl hanging on a wooden hanger, strictly restore the design, color, and tassels from the reference image. Minimalist magazine style, soft studio lighting, light beige background. High-quality cashmere texture. Typography: "WINTER WARMTH" in elegant serif font, Chinese characters above English, grid alignment. 9:16 aspect ratio.
+*   **负面词：** (low quality, blurry, distorted tassels, different color, messy background, extra objects, cartoonish, low resolution, watermark).
+
+---
+
+#### 海报02 - 生活场景 (Lifestyle)
+*   **场景描述：** 模特穿着该款披肩坐在冬日午后的咖啡馆窗边，阳光洒在流苏上。
+*   **中英文内容：** 优雅随行 / ELEGANT ON THE GO
+*   **Prompt:** A stylish Asian female model wearing the oatmeal fringe shawl from the reference image, sitting in a sunny cafe, soft natural lighting, elegant posture. The shawl's texture and tassels are clearly visible. Film-like magazine layout. Typography: "ELEGANT ON THE GO" stacked in the upper right corner. 4k, cinematic.
+
+---
+
+#### 海报03 - 工艺/技术可视化 (Process)
+*   **核心卖点：** 仿羊绒面料显微特写。
+*   **中英文内容：** 软糯亲肤 / CLOUD-LIKE SOFTNESS
+*   **Prompt:** Macro shot of the shawl fabric, showing the delicate and soft fibers, extremely detailed texture, oatmeal color. Floating golden particles representing warmth. Professional product photography. Typography: "CLOUD-LIKE SOFTNESS" with thin decorative lines.
+
+---
+
+#### 海报04 - 细节特写01 (Detail - Tassels)
+*   **展示重点：** 底部流苏的垂顺感。
+*   **中英文内容：** 灵动流苏 / DYNAMIC TASSELS
+*   **Prompt:** Close-up of the bottom fringe tassels of the shawl, hanging vertically and neatly. Soft focus background. High contrast lighting to show the movement of each thread. Magazine style layout with large white space.
+
+---
+
+#### 海报05 - 细节特写02 (Detail - Fabric)
+*   **展示重点：** 织物密度的紧实与平整。
+*   **中英文内容：** 细腻织造 / FINE WEAVING
+*   **Prompt:** Extreme close-up of the shawl surface, showing the regular weaving pattern, matte texture, no pilling, professional studio lighting, oatmeal color consistency.
+
+---
+
+#### 海报06 - 细节特写03 (Detail - Multi-way)
+*   **展示重点：** 展示作为围巾缠绕的效果。
+*   **中英文内容：** 一物多穿 / VERSATILE STYLE
+*   **Prompt:** Collage of two images: one showing the product as a shawl, another wrapped as a scarf around a neck. Minimalist white background, magazine grid layout. Typography: "VERSATILE STYLE" centered between the images.
+
+---
+
+#### 海报07 - 用户评价 (Review)
+*   **排版描述：** 玻璃拟态卡片置于下方。
+*   **中英文内容：** “像拥抱一样温暖” / "As warm as a hug"
+*   **Prompt:** The shawl draped over a cozy velvet chair. A semi-transparent glassmorphism card on top with text "As warm as a hug". Soft, warm home atmosphere, morning sun.
+
+---
+
+#### 海报08 - 配色灵感 (Moodboard)
+*   **排版描述：** 采用色块拼贴形式。
+*   **中英文内容：** 大地色系 / EARTHY PALETTE
+*   **Prompt:** A moodboard featuring the shawl, a cup of latte, dried wheat stalks, and color swatches in #D2B48C and #F5F5DC. High-end lifestyle aesthetic, clean layout.
+
+---
+
+#### 海报09 - 产品参数 (Specifications)
+*   **排版描述：** 网格列表。
+*   **中英文内容：** 产品规格 / SPECIFICATIONS (含材质: 仿羊绒, 尺寸: 180x70cm)
+*   **Prompt:** Clean white background with the shawl folded neatly. On the right side, a list of specifications in bilingual (Chinese/English). Sans-serif font, precise alignment, magazine style.
+
+---
+
+#### 海报10 - 使用指南 (Usage Guide)
+*   **展示重点：** 简单插画或模特演示如何披挂。
+*   **中英文内容：** 穿搭建议 / STYLING GUIDE
+*   **Prompt:** Infographic style poster, four small square frames showing different ways to wear the shawl. Muted colors, minimalist line art combined with product photos. CTA button at the bottom: "SHOP NOW 立即选购".
+
+---
+
+**统一参数设置：**
+*   **Negative Prompt:** (deformed, distorted, disfigured, doll, poorly drawn, extra limbs, blurred, grainy, low-res, noisy, messy tassels, wrong color, cluttered background).
+*   **LOGO位置：** 所有海报左上角。
+*   **CTA按钮：** 细黑框白底，位于海报底部中心或右下角。
