@@ -1,0 +1,243 @@
+根据您上传的图片（一个极具艺术感的3D抽象形态，结合了有机流体与几何立方体，带有声波纹理），这看起来像是一个概念性的**高科技智能音频设备**或**情绪调节灯具**，或者是某种**数字艺术藏品（NFT/元宇宙资产）**。
+
+为了完成这套电商KV系统，我将将其定义为一款名为 **"AURA FLOW" (灵韵·流光)** 的**智能情绪音箱**。
+
+以下是完整的分析与提示词系统生成：
+
+---
+
+### 第一步：产品信息智能提取
+
+**【识别报告】**
+*   **品牌名称**：[AURA] / [灵韵] (基于视觉推断的虚拟品牌名)
+*   **产品类型**：[消费电子] - [智能情绪音箱/艺术摆件]
+*   **产品规格**：约 20cm x 20cm (推断)，无线蓝牙连接
+*   **核心卖点**：
+    1.  流体几何美学 (Fluid Geometric Aesthetic)
+    2.  可视听觉纹理 (Visualized Audio Texture)
+    3.  情绪渐变光效 (Emotional Gradient Light)
+    4.  360°沉浸声场 (360° Immersive Sound)
+    5.  双重触感材质 (Dual Tactile Texture)
+*   **主色调**：薄荷绿 (#7FFFD4) + 珊瑚粉 (#FFB6C1)
+*   **辅助色**：香芋紫 (#E6E6FA) + 象牙白 (#FFFFF0)
+*   **设计风格**：有机未来主义 (Organic Futurism) / 3D C4D风格
+*   **目标受众**：Z世代、设计爱好者、科技极客、追求生活品质的独居青年
+*   **品牌调性**：先锋、空灵、治愈、科技感
+*   **包装/产品亮点**：左侧为带有声波纹理的有机流体形态，右侧为极简几何立方体，两者融合，呈现色彩渐变。
+
+---
+
+### 第二步：视觉风格选择
+
+**☑ 科技未来风格（冷色调、几何图形、数据可视化、蓝光效果）**
+*(注：虽然选择科技风格，但基于产品色调，会调整为“明亮科技/治愈系未来感”，而非黑暗赛博朋克)*
+
+### 第三步：文字排版效果选择
+
+**☑ 玻璃拟态卡片 + 半透明背景 + 柔和圆角（现代风）**
+*(这种风格最能衬托产品的3D渲染质感和半透明渐变色)*
+
+**排版格式设定：**
+*   **标题格式**：格式A - 中英堆叠（中文在上，英文在下）
+*   **段落格式**：中英分段，英文80%字号
+*   **配色**：深灰文字 (#333333) 用于浅色背景，白色文字 (#FFFFFF) 用于深色背景
+
+---
+
+### 第四步：生成完整提示词系统
+
+#### LOGO生成提示词
+```markdown
+**中文提示词：**
+极简主义LOGO设计，品牌名称"AURA"，无衬线现代字体，字体设计融合流体线条与几何直角，呼应"软硬结合"的产品形态。配色使用薄荷绿到珊瑚粉的渐变色。矢量图，扁平化设计，适合科技产品，高级感，留白。
+
+**English Prompt:**
+Minimalist logo design, brand name "AURA", modern sans-serif typography, font design integrates fluid lines with geometric right angles, echoing the "soft meets hard" product shape. Color scheme uses a gradient from Mint Green to Coral Pink. Vector graphic, flat design, suitable for tech products, premium feel, negative space.
+```
+
+---
+
+#### 海报01 - 主KV视觉 (Hero Shot)
+```markdown
+**中文提示词：**
+一张极其精致的电商主KV海报，9:16竖版。核心主体：严格还原上传的"AURA FLOW"产品图，左侧是粉紫色渐变的有机流体形态，带有细腻的声波纹理，右侧是薄荷绿色的几何立方体，材质为高品质哑光磨砂。背景：纯净的银灰色渐变背景，带有轻微的漫反射光影，营造悬浮感。文字排版：画面顶部居中放置标题，使用玻璃拟态卡片承载文字。标题“声形合一 / FORM OF SOUND”。底部居中CTA按钮“探索未来 / EXPLORE FUTURE”。
+
+**English Prompt:**
+An exquisite e-commerce main KV poster, 9:16 vertical format. Hero Subject: Strictly restore the uploaded "AURA FLOW" product image, featuring an organic fluid shape with pink-purple gradients and fine sound wave textures on the left, and a mint green geometric cube on the right, high-quality matte frosted texture. Background: Pure silver-grey gradient background with slight diffuse lighting and shadows, creating a levitation effect. Typography: Centered title at the top, text contained within a glassmorphism card. Title "声形合一 / FORM OF SOUND". Bottom centered CTA button "探索未来 / EXPLORE FUTURE".
+
+**Negative Prompts:**
+dark background, low resolution, messy text, distorted shape, glossy plastic look, clutter, wrong colors.
+
+**排版说明：**
+- 标题位置：顶部居中，格式A（中英堆叠）。
+- 字体风格：无衬线粗体（中文），Futura（英文）。
+- 装饰元素：背景中隐约可见的磨砂玻璃悬浮层。
+- 颜色：标题字色#333333。
+```
+
+---
+
+#### 海报02 - 生活场景 (Lifestyle)
+```markdown
+**中文提示词：**
+生活场景海报。场景：一个极简风格的现代客厅，阳光透过百叶窗洒在白色的茶几上，光影斑驳。产品"AURA FLOW"放置在茶几中央，作为艺术摆件。氛围：慵懒的午后，治愈系，高雅。文字排版：左上角标题“灵动空间 / FLUID SPACE”。右下角文案“艺术与科技的静谧融合。 / A quiet fusion of art and technology.”
+
+**English Prompt:**
+Lifestyle scenario poster. Scene: A minimalist modern living room, sunlight spilling through blinds onto a white coffee table, dappled light and shadow. The product "AURA FLOW" sits in the center of the table as an art piece. Atmosphere: Lazy afternoon, healing, elegant. Typography: Top-left title "灵动空间 / FLUID SPACE". Bottom-right copy "艺术与科技的静谧融合。 / A quiet fusion of art and technology."
+
+**Negative Prompts:**
+crowded room, messy cables, dark room, harsh lighting, retro style, people.
+
+**排版说明：**
+- 标题位置：左上角，格式A。
+- 文案位置：右下角，玻璃拟态背景板。
+```
+
+---
+
+#### 海报03 - 概念可视化 (Concept)
+```markdown
+**中文提示词：**
+概念可视化海报。展示声波如何转化为实体。背景是深邃的深灰色空间，无数彩色的声波线条（粉色和绿色）汇聚向中心，逐渐凝固成"AURA FLOW"产品的形状。表现“声音可视化”的概念。特效：发光线条，粒子效果，科技感。文字排版：底部居中标题“听见色彩 / HEAR THE COLOR”。
+
+**English Prompt:**
+Concept visualization poster. Showing how sound waves transform into solid form. Background is a deep dark grey space, countless colorful sound wave lines (pink and green) converging towards the center, gradually solidifying into the shape of the "AURA FLOW" product. Represents the concept of "Visualized Audio". Effects: Glowing lines, particle effects, tech feel. Typography: Bottom centered title "听见色彩 / HEAR THE COLOR".
+
+**Negative Prompts:**
+flat image, boring, sketch, cartoon, low quality.
+
+**排版说明：**
+- 标题位置：底部居中，悬浮效果。
+- 字体颜色：白色发光文字。
+```
+
+---
+
+#### 海报04 - 细节特写01 (Detail - Sound Wave Texture)
+```markdown
+**中文提示词：**
+超微距特写海报。镜头聚焦在产品左侧的粉紫色区域，清晰展示表面细腻的同心圆波纹（声波纹理）。展示材质的细腻磨砂触感，光线柔和地在波纹上产生漫反射。文字排版：右上角说明“声纹肌理 / ACOUSTIC TEXTURE”。
+
+**English Prompt:**
+Extreme macro close-up poster. Focus on the pink-purple area on the left side of the product, clearly showing the delicate concentric ripple patterns (sound wave texture). Showcasing the fine matte tactile quality of the material, light softly diffusing on the ripples. Typography: Top-right caption "声纹肌理 / ACOUSTIC TEXTURE".
+
+**Negative Prompts:**
+blurry, noisy, pixelated, wrong texture, shiny reflection.
+
+**排版说明：**
+- 标题位置：右上角，引线指向纹理细节。
+```
+
+---
+
+#### 海报05 - 细节特写02 (Detail - Geometric Fusion)
+```markdown
+**中文提示词：**
+特写海报。聚焦在有机形态与几何立方体的交接处。展示粉色流体如何完美地融合进薄荷绿的硬朗线条中。强调“软与硬”的对比与和谐。材质对比：柔光表面 vs 棱角分明。文字排版：左下角标题“几何共生 / GEOMETRIC SYMBIOSIS”。
+
+**English Prompt:**
+Close-up poster. Focus on the junction between the organic shape and the geometric cube. Show how the pink fluid perfectly merges into the sharp Mint Green lines. Emphasize the contrast and harmony of "soft vs hard". Material contrast: Soft-glow surface vs Sharp edges. Typography: Bottom-left title "几何共生 / GEOMETRIC SYMBIOSIS".
+
+**Negative Prompts:**
+gap, glue marks, imperfection, separation, low detail.
+
+**排版说明：**
+- 标题位置：左下角，格式A。
+```
+
+---
+
+#### 海报06 - 细节特写03 (Function - Light)
+```markdown
+**中文提示词：**
+功能展示海报。在微暗的环境中，产品内部发出柔和的呼吸灯光。粉色和绿色的光晕向四周扩散，照亮了周围的空气尘埃。展示“情绪照明”功能。氛围：梦幻，神秘。文字排版：顶部居中标题“情绪光效 / MOOD LIGHTING”。
+
+**English Prompt:**
+Function showcase poster. In a dimly lit environment, the product emits a soft breathing light from within. Pink and green halos diffuse outward, illuminating surrounding airborne dust. Showcasing the "Mood Lighting" function. Atmosphere: Dreamy, mysterious. Typography: Top centered title "情绪光效 / MOOD LIGHTING".
+
+**Negative Prompts:**
+bright daylight, flash photography, overexposed, harsh shadows.
+
+**排版说明：**
+- 标题位置：顶部居中，发光字体效果。
+```
+
+---
+
+#### 海报07 - 用户评价 (Review)
+```markdown
+**中文提示词：**
+用户评价海报。背景是虚化的极简家居一角。画面中央悬浮三个玻璃拟态卡片，记录用户好评。卡片1：“放在桌面上简直是艺术品。 / A masterpiece on the desk.” 卡片2：“音质惊人的纯净。 / Surprisingly pure sound quality.” 卡片3：“看着它心情就会变好。 / It lifts my mood just looking at it.” 底部放置产品小图。
+
+**English Prompt:**
+User review poster. Background is a blurred minimalist home corner. Three glassmorphism cards float in the center, displaying user reviews. Card 1: "放在桌面上简直是艺术品。 / A masterpiece on the desk." Card 2: "音质惊人的纯净。 / Surprisingly pure sound quality." Card 3: "看着它心情就会变好。 / It lifts my mood just looking at it." Small product image at the bottom.
+
+**Negative Prompts:**
+text error, illegible text, busy background.
+
+**排版说明：**
+- 布局：三张磨砂玻璃卡片垂直排列，错落有致。
+```
+
+---
+
+#### 海报08 - 品牌故事/配色灵感 (Moodboard)
+```markdown
+**中文提示词：**
+情绪板/灵感海报。拼贴风格。画面中心是产品，四周环绕着灵感来源：薄荷叶、粉色夕阳云彩、流动的水波、极简建筑线条。色彩提取色卡展示在下方：薄荷绿(#88DDBB)、珊瑚粉(#FFAA99)。文字排版：居中大标题“灵感来源 / INSPIRATION”。
+
+**English Prompt:**
+Moodboard/Inspiration poster. Collage style. The product is in the center, surrounded by inspiration sources: mint leaves, pink sunset clouds, flowing water ripples, minimalist architectural lines. Color palette extracted shown below: Mint Green (#88DDBB), Coral Pink (#FFAA99). Typography: Centered large title "灵感来源 / INSPIRATION".
+
+**Negative Prompts:**
+cluttered, messy collage, unorganized, bad composition.
+
+**排版说明：**
+- 布局：网格拼贴布局，中心为产品。色卡为圆形色块。
+```
+
+---
+
+#### 海报09 - 产品参数 (Specifications)
+```markdown
+**中文提示词：**
+极简风格参数表海报。背景为浅灰白色。左侧是产品的侧面剪影图。右侧是玻璃拟态风格的参数列表。
+内容：
+| 尺寸 Size | 200 x 200 x 180 mm |
+| 材质 Material | 环保树脂 Eco-Resin |
+| 续航 Battery | 12 Hours |
+| 连接 Connectivity | Bluetooth 5.2 |
+文字排版：标题“产品参数 / SPECIFICATIONS”。
+
+**English Prompt:**
+Minimalist specifications table poster. Background is light off-white. Left side is the side silhouette of the product. Right side is a specification list in glassmorphism style.
+Content:
+| 尺寸 Size | 200 x 200 x 180 mm |
+| 材质 Material | 环保树脂 Eco-Resin |
+| 续航 Battery | 12 Hours |
+| 连接 Connectivity | Bluetooth 5.2 |
+Typography: Title "产品参数 / SPECIFICATIONS".
+
+**Negative Prompts:**
+complex background, unreadable text, dark background.
+
+**排版说明：**
+- 布局：左右分割结构。参数表使用细线条分隔。
+```
+
+---
+
+#### 海报10 - 包装清单 (In the Box)
+```markdown
+**中文提示词：**
+俯视视角海报。在纯白背景上，整齐排列产品包装内容物：AURA FLOW音箱本体、极简设计的白色电源适配器、一本设计精美的说明书、一张品牌贴纸。布局：Knolling（把物体摆放得整整齐齐）风格。光影：均匀顶光。文字排版：底部标题“包装清单 / WHAT'S IN THE BOX”。
+
+**English Prompt:**
+Top-down view poster. On a pure white background, neatly arranged product package contents: AURA FLOW speaker unit, minimalist white power adapter, a beautifully designed manual, a brand sticker. Layout: Knolling style. Lighting: Even top lighting. Typography: Bottom title "包装清单 / WHAT'S IN THE BOX".
+
+**Negative Prompts:**
+shadows, messy, perspective view, missing items.
+
+**排版说明：**
+- 布局：严格的几何对齐（Knolling）。标题居中。
+```

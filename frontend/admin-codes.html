@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兑换码管理 - 品牌视觉工坊</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Noto+Serif+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#F9F7F2', 'paper-light': '#FFFEFA', 'ink': '#2C2420', 'ink-light': '#585350',
+                        'gold': '#C68E5D', 'gold-dim': '#AB7F55', 'sage': '#8DA399', 'stone': '#E5E0D8',
+                    },
+                    fontFamily: { serif: ['"Noto Serif SC"', '"Playfair Display"', 'serif'], sans: ['"Lato"', 'sans-serif'], },
+                    boxShadow: { 'layer': '0 10px 30px -10px rgba(44, 36, 32, 0.08)', 'float': '0 20px 40px -10px rgba(44, 36, 32, 0.15)', 'glow': '0 0 20px rgba(198, 142, 93, 0.3)', },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Lato', sans-serif; background-color: #F9F7F2; color: #2C2420; overflow-x: hidden; }
+        .bg-noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .blob-bg { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.4; animation: blob 10s infinite; }
+        @keyframes blob { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-50px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.8s ease-out forwards; }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; } .fade-enter-from, .fade-leave-to { opacity: 0; }
+        [v-cloak] { display: none; }
+        .code-text { font-family: 'Courier New', monospace; letter-spacing: 0.1em; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="bg-noise"></div>
+    <div class="blob-bg w-96 h-96 bg-gold/20 -top-[10%] -left-[10%]"></div>
+    <div class="blob-bg w-80 h-80 bg-stone/50 bottom-[10%] -right-[5%]"></div>
+
+    <div id="app" v-cloak class="relative z-10 min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 backdrop-blur-md bg-paper/80 border-b border-stone/50">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                <div class="w-24">
+                    <a href="/" class="group flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-ink-light hover:text-gold transition-colors">
+                        <span class="w-8 h-[1px] bg-ink-light group-hover:bg-gold transition-colors"></span>返回
+                    </a>
+                </div>
+                <h1 class="font-serif text-2xl text-ink font-bold italic">Atelier<span class="text-gold">.</span>AI</h1>
+                <div class="w-24"></div>
+            </div>
+        </header>
+
+        <!-- 密码验证遮罩 -->
+        <div v-if="!isAuthenticated" class="flex-grow flex items-center justify-center p-6">
+            <div class="w-full max-w-md animate-fade-up">
+                <div class="text-center mb-8">
+                    <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">管理后台</span>
+                    <h2 class="font-serif text-3xl text-ink leading-tight mb-3">兑换码管理</h2>
+                    <p class="text-ink-light font-light text-sm">请输入管理员密码</p>
+                </div>
+
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-gold/30 via-gold-dim/20 to-gold/30 rounded-xl opacity-50 blur group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative bg-paper-light border border-stone rounded-xl p-8 shadow-layer">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-xs font-bold tracking-[0.15em] uppercase text-ink-light mb-2">管理员密码</label>
+                                <input
+                                    v-model="password"
+                                    type="password"
+                                    @keyup.enter="authenticate"
+                                    class="w-full px-4 py-3 bg-paper border border-stone rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
+                                    placeholder="请输入密码"
+                                >
+                            </div>
+                            <p v-if="authError" class="text-red-500 text-sm">{{ authError }}</p>
+                            <button
+                                @click="authenticate"
+                                :disabled="!password || authenticating"
+                                class="w-full py-3 bg-ink hover:bg-ink-light text-white rounded-lg font-bold tracking-widest uppercase text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {{ authenticating ? '验证中...' : '进入管理' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容 -->
+        <main v-else class="flex-grow p-6">
+            <div class="max-w-5xl mx-auto animate-fade-up">
+                <!-- Title -->
+                <div class="text-center mb-10">
+                    <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">管理后台</span>
+                    <h2 class="font-serif text-4xl text-ink leading-tight mb-3">兑换码管理</h2>
+                </div>
+
+                <!-- 生成兑换码 -->
+                <div class="relative group mb-10">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-gold/30 via-gold-dim/20 to-gold/30 rounded-xl opacity-50 blur group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative bg-paper-light border border-stone rounded-xl p-8 shadow-layer">
+                        <h3 class="text-xs font-bold tracking-[0.2em] uppercase text-gold mb-6">生成兑换码</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <!-- 积分类型 -->
+                            <div>
+                                <label class="block text-xs font-bold tracking-[0.15em] uppercase text-ink-light mb-2">积分类型</label>
+                                <select v-model="newCode.credits" class="w-full px-4 py-3 bg-paper border border-stone rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all">
+                                    <option :value="100">100 积分</option>
+                                    <option :value="500">500 积分</option>
+                                    <option :value="1000">1000 积分</option>
+                                </select>
+                            </div>
+                            <!-- 生成数量 -->
+                            <div>
+                                <label class="block text-xs font-bold tracking-[0.15em] uppercase text-ink-light mb-2">生成数量</label>
+                                <select v-model="newCode.count" class="w-full px-4 py-3 bg-paper border border-stone rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all">
+                                    <option v-for="n in 50" :key="n" :value="n">{{ n }} 个</option>
+                                </select>
+                            </div>
+                            <!-- 生成按钮 -->
+                            <div class="flex items-end">
+                                <button
+                                    @click="generateCodes"
+                                    :disabled="generating"
+                                    class="w-full py-3 bg-gold hover:bg-gold-dim text-white rounded-lg font-bold tracking-widest uppercase text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    <i v-if="generating" class="fas fa-spinner fa-spin"></i>
+                                    <span>{{ generating ? '生成中...' : '生成兑换码' }}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 刚生成的兑换码 -->
+                        <div v-if="generatedCodes.length > 0" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-green-700 font-bold text-sm">新生成的兑换码 ({{ generatedCodes.length }} 个 {{ newCode.credits }} 积分)</span>
+                                <button @click="copyAllCodes" class="text-xs text-green-600 hover:text-green-800 flex items-center gap-1">
+                                    <i class="fas fa-copy"></i> 复制全部
+                                </button>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    v-for="code in generatedCodes"
+                                    :key="code"
+                                    @click="copyCode(code)"
+                                    class="code-text px-3 py-1.5 bg-white border border-green-300 rounded text-sm cursor-pointer hover:bg-green-100 transition-colors"
+                                    title="点击复制"
+                                >
+                                    {{ code }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 兑换码列表 -->
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-stone to-white rounded-xl opacity-30 blur transition duration-500"></div>
+                    <div class="relative bg-paper-light border border-stone rounded-xl p-8 shadow-layer">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xs font-bold tracking-[0.2em] uppercase text-gold">兑换码列表</h3>
+                            <button @click="loadCodes" class="text-xs text-ink-light hover:text-gold flex items-center gap-1 transition-colors">
+                                <i class="fas fa-refresh" :class="{'fa-spin': loadingCodes}"></i> 刷新
+                            </button>
+                        </div>
+
+                        <div v-if="loadingCodes" class="text-center py-10 text-ink-light">
+                            <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                            <p class="text-sm">加载中...</p>
+                        </div>
+
+                        <div v-else-if="codes.length === 0" class="text-center py-10 text-ink-light">
+                            <i class="fas fa-ticket text-4xl mb-3 opacity-30"></i>
+                            <p class="text-sm">暂无兑换码</p>
+                        </div>
+
+                        <div v-else class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b border-stone">
+                                        <th class="text-left py-3 px-2 text-xs font-bold tracking-[0.1em] uppercase text-ink-light">兑换码</th>
+                                        <th class="text-center py-3 px-2 text-xs font-bold tracking-[0.1em] uppercase text-ink-light">积分</th>
+                                        <th class="text-center py-3 px-2 text-xs font-bold tracking-[0.1em] uppercase text-ink-light">状态</th>
+                                        <th class="text-left py-3 px-2 text-xs font-bold tracking-[0.1em] uppercase text-ink-light">创建时间</th>
+                                        <th class="text-center py-3 px-2 text-xs font-bold tracking-[0.1em] uppercase text-ink-light">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="code in codes" :key="code.id" class="border-b border-stone/50 hover:bg-stone/10 transition-colors">
+                                        <td class="py-3 px-2">
+                                            <span class="code-text text-ink font-medium">{{ code.code }}</span>
+                                        </td>
+                                        <td class="py-3 px-2 text-center">
+                                            <span class="px-2 py-1 bg-gold/10 text-gold rounded text-xs font-bold">{{ code.credits }}</span>
+                                        </td>
+                                        <td class="py-3 px-2 text-center">
+                                            <span v-if="code.status === 'unused'" class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">未使用</span>
+                                            <span v-else class="px-2 py-1 bg-stone text-ink-light rounded text-xs">已使用</span>
+                                        </td>
+                                        <td class="py-3 px-2 text-ink-light text-xs">{{ formatDate(code.created_at) }}</td>
+                                        <td class="py-3 px-2 text-center">
+                                            <button
+                                                v-if="code.status === 'unused'"
+                                                @click="copyCode(code.code)"
+                                                class="text-gold hover:text-gold-dim transition-colors"
+                                                title="复制"
+                                            >
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                            <span v-else class="text-ink-light/50">-</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Toast 提示 -->
+        <transition name="fade">
+            <div v-if="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 bg-ink text-white rounded-lg shadow-float z-50">
+                {{ toast }}
+            </div>
+        </transition>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    password: '',
+                    isAuthenticated: false,
+                    authenticating: false,
+                    authError: '',
+
+                    newCode: {
+                        credits: 100,
+                        count: 1
+                    },
+                    generating: false,
+                    generatedCodes: [],
+
+                    codes: [],
+                    loadingCodes: false,
+
+                    toast: ''
+                };
+            },
+            mounted() {
+                // 检查是否已验证
+                const savedPassword = sessionStorage.getItem('admin_password');
+                if (savedPassword) {
+                    this.password = savedPassword;
+                    this.authenticate(true);
+                }
+            },
+            methods: {
+                async authenticate(silent = false) {
+                    if (!this.password) return;
+
+                    this.authenticating = true;
+                    this.authError = '';
+
+                    try {
+                        // 尝试获取兑换码列表来验证密码
+                        const response = await fetch('/api/admin/codes', {
+                            headers: {
+                                'Admin-Password': this.password
+                            }
+                        });
+
+                        if (response.ok) {
+                            this.isAuthenticated = true;
+                            sessionStorage.setItem('admin_password', this.password);
+                            const data = await response.json();
+                            this.codes = data.codes;
+                        } else {
+                            this.authError = '密码错误';
+                            sessionStorage.removeItem('admin_password');
+                        }
+                    } catch (error) {
+                        console.error('验证失败', error);
+                        this.authError = '验证失败，请重试';
+                    } finally {
+                        this.authenticating = false;
+                    }
+                },
+
+                async generateCodes() {
+                    this.generating = true;
+                    this.generatedCodes = [];
+
+                    try {
+                        const response = await fetch('/api/admin/generate-codes-auth', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Admin-Password': this.password
+                            },
+                            body: JSON.stringify(this.newCode)
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.generatedCodes = data.codes;
+                            this.showToast(`成功生成 ${data.codes.length} 个兑换码`);
+                            // 刷新列表
+                            this.loadCodes();
+                        } else {
+                            const error = await response.json();
+                            this.showToast(error.detail || '生成失败');
+                        }
+                    } catch (error) {
+                        console.error('生成失败', error);
+                        this.showToast('生成失败，请重试');
+                    } finally {
+                        this.generating = false;
+                    }
+                },
+
+                async loadCodes() {
+                    this.loadingCodes = true;
+
+                    try {
+                        const response = await fetch('/api/admin/codes', {
+                            headers: {
+                                'Admin-Password': this.password
+                            }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.codes = data.codes;
+                        }
+                    } catch (error) {
+                        console.error('加载失败', error);
+                    } finally {
+                        this.loadingCodes = false;
+                    }
+                },
+
+                copyCode(code) {
+                    navigator.clipboard.writeText(code);
+                    this.showToast('已复制: ' + code);
+                },
+
+                copyAllCodes() {
+                    const text = this.generatedCodes.join('\n');
+                    navigator.clipboard.writeText(text);
+                    this.showToast(`已复制 ${this.generatedCodes.length} 个兑换码`);
+                },
+
+                formatDate(dateStr) {
+                    if (!dateStr) return '-';
+                    const date = new Date(dateStr);
+                    return date.toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                },
+
+                showToast(message) {
+                    this.toast = message;
+                    setTimeout(() => {
+                        this.toast = '';
+                    }, 2000);
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

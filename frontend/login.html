@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 品牌视觉工坊</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Noto+Serif+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#F9F7F2', 'paper-light': '#FFFEFA', 'ink': '#2C2420', 'ink-light': '#585350',
+                        'gold': '#C68E5D', 'gold-dim': '#AB7F55', 'sage': '#8DA399', 'stone': '#E5E0D8',
+                    },
+                    fontFamily: { serif: ['"Noto Serif SC"', '"Playfair Display"', 'serif'], sans: ['"Lato"', 'sans-serif'], },
+                    boxShadow: { 'layer': '0 10px 30px -10px rgba(44, 36, 32, 0.08)', 'float': '0 20px 40px -10px rgba(44, 36, 32, 0.15)', 'glow': '0 0 20px rgba(198, 142, 93, 0.3)', },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Lato', sans-serif; background-color: #F9F7F2; color: #2C2420; overflow-x: hidden; }
+        .bg-noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .blob-bg { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.4; animation: blob 10s infinite; }
+        @keyframes blob { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-50px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.8s ease-out forwards; }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; } .fade-enter-from, .fade-leave-to { opacity: 0; }
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="bg-noise"></div>
+    <div class="blob-bg w-96 h-96 bg-gold/20 -top-[10%] -left-[10%]"></div>
+    <div class="blob-bg w-80 h-80 bg-stone/50 bottom-[10%] -right-[5%]"></div>
+
+    <div id="app" v-cloak class="relative z-10 min-h-screen flex flex-col">
+        <header class="sticky top-0 z-50 backdrop-blur-md bg-paper/80 border-b border-stone/50">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                <a href="/" class="flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-ink-light hover:text-gold transition-colors">
+                    <span class="w-8 h-[1px] bg-ink-light group-hover:bg-gold transition-colors"></span>返回首页
+                </a>
+                <h1 class="font-serif text-2xl text-ink font-bold italic">Atelier<span class="text-gold">.</span>AI</h1>
+                <div class="w-24"></div>
+            </div>
+        </header>
+
+        <main class="flex-grow flex items-center justify-center p-6">
+            <div class="w-full max-w-md animate-fade-up">
+                <!-- Title -->
+                <div class="text-center mb-12">
+                    <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">会员通行</span>
+                    <h2 class="font-serif text-4xl text-ink leading-tight mb-3">欢迎回来</h2>
+                    <p class="text-ink-light font-light text-sm">使用邮箱验证码登录创作空间</p>
+                </div>
+
+                <!-- Login Form -->
+                <div class="relative group mb-8">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-stone to-white rounded-lg opacity-50 blur group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative bg-paper-light border border-stone rounded-lg p-8 shadow-layer">
+                        <div class="space-y-6">
+                            <!-- Email Input -->
+                            <div>
+                                <label for="email" class="block text-xs font-bold tracking-widest uppercase text-gold mb-2">邮箱地址</label>
+                                <div class="relative">
+                                    <input
+                                        id="email"
+                                        v-model="email"
+                                        type="email"
+                                        placeholder="your@email.com"
+                                        class="w-full bg-transparent border border-stone/50 rounded-lg px-4 py-3 text-ink placeholder-stone/80 focus:ring-1 focus:ring-gold/50 focus:border-gold outline-none font-serif transition-all"
+                                        :disabled="loading"
+                                    />
+                                </div>
+                            </div>
+
+                            <!-- Verification Code Input -->
+                            <div>
+                                <label for="code" class="block text-xs font-bold tracking-widest uppercase text-gold mb-2">验证码</label>
+                                <div class="flex gap-2">
+                                    <input
+                                        id="code"
+                                        v-model="code"
+                                        type="text"
+                                        maxlength="6"
+                                        placeholder="6位数字验证码"
+                                        class="flex-1 bg-transparent border border-stone/50 rounded-lg px-4 py-3 text-ink placeholder-stone/80 focus:ring-1 focus:ring-gold/50 focus:border-gold outline-none font-serif transition-all"
+                                        :disabled="loading"
+                                        @keyup.enter="login"
+                                    />
+                                    <button
+                                        @click="sendCode"
+                                        :disabled="countdown > 0 || sendingCode || !email"
+                                        class="px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest transition-all"
+                                        :class="countdown > 0 || sendingCode || !email
+                                            ? 'bg-stone text-white cursor-not-allowed'
+                                            : 'bg-ink text-white hover:bg-gold hover:shadow-glow active:scale-95'"
+                                    >
+                                        {{ sendingCode ? '发送中' : (countdown > 0 ? `${countdown}秒` : '发送验证码') }}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Login Button -->
+                            <div class="pt-4">
+                                <button
+                                    @click="login"
+                                    :disabled="loading || !email || !code"
+                                    class="relative overflow-hidden group w-full py-4 rounded-lg font-bold tracking-widest text-xs uppercase transition-all flex items-center justify-center gap-3"
+                                    :class="loading || !email || !code
+                                        ? 'bg-stone text-white cursor-not-allowed'
+                                        : 'bg-ink text-white hover:bg-gold hover:shadow-glow active:scale-95'"
+                                >
+                                    <span class="relative z-10 flex items-center gap-3">
+                                        {{ loading ? '登录中...' : '进入创作空间' }}
+                                        <i v-if="!loading" class="fas fa-long-arrow-alt-right group-hover:translate-x-1 transition-transform"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <transition name="fade">
+                    <div v-if="errorMessage" class="bg-red-50/90 backdrop-blur border border-red-200 px-6 py-4 rounded-lg shadow-layer mb-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-exclamation-circle text-red-500"></i>
+                            <p class="text-sm text-red-700">{{ errorMessage }}</p>
+                        </div>
+                    </div>
+                </transition>
+
+                <transition name="fade">
+                    <div v-if="successMessage" class="bg-gold/10 backdrop-blur border border-gold/30 px-6 py-4 rounded-lg shadow-layer mb-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-check-circle text-gold"></i>
+                            <p class="text-sm text-gold-dim">{{ successMessage }}</p>
+                        </div>
+                    </div>
+                </transition>
+
+                <!-- Footer -->
+                <p class="text-center text-xs text-ink-light/60 font-light tracking-wider">
+                    首次登录将自动注册账号
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue;
+
+        createApp({
+            setup() {
+                const email = ref('');
+                const code = ref('');
+                const countdown = ref(0);
+                const sendingCode = ref(false);
+                const loading = ref(false);
+                const errorMessage = ref('');
+                const successMessage = ref('');
+
+                // 发送验证码
+                const sendCode = async () => {
+                    if (!email.value || sendingCode.value || countdown.value > 0) return;
+
+                    errorMessage.value = '';
+                    successMessage.value = '';
+                    sendingCode.value = true;
+
+                    try {
+                        const response = await fetch('/api/auth/send-code', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: email.value })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            successMessage.value = data.message;
+                            // 开始60秒倒计时
+                            countdown.value = 60;
+                            const timer = setInterval(() => {
+                                countdown.value--;
+                                if (countdown.value <= 0) {
+                                    clearInterval(timer);
+                                }
+                            }, 1000);
+                        } else {
+                            errorMessage.value = data.detail || '发送失败，请重试';
+                        }
+                    } catch (error) {
+                        errorMessage.value = '网络错误，请检查网络连接';
+                    } finally {
+                        sendingCode.value = false;
+                    }
+                };
+
+                // 登录
+                const login = async () => {
+                    if (!email.value || !code.value || loading.value) return;
+
+                    errorMessage.value = '';
+                    successMessage.value = '';
+                    loading.value = true;
+
+                    try {
+                        const response = await fetch('/api/auth/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                email: email.value,
+                                code: code.value
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            // 保存 token 和 user 到 localStorage
+                            localStorage.setItem('access_token', data.access_token);
+                            localStorage.setItem('user', JSON.stringify(data.user));
+
+                            successMessage.value = '登录成功，正在跳转...';
+
+                            // 跳转到首页
+                            setTimeout(() => {
+                                window.location.href = '/';
+                            }, 500);
+                        } else {
+                            errorMessage.value = data.detail || '登录失败，请重试';
+                        }
+                    } catch (error) {
+                        errorMessage.value = '网络错误，请检查网络连接';
+                    } finally {
+                        loading.value = false;
+                    }
+                };
+
+                // 检查是否已登录
+                const checkAuth = () => {
+                    const token = localStorage.getItem('access_token');
+                    if (token) {
+                        // 已登录，跳转到首页
+                        window.location.href = '/';
+                    }
+                };
+
+                // 页面加载时检查登录状态
+                checkAuth();
+
+                return {
+                    email,
+                    code,
+                    countdown,
+                    sendingCode,
+                    loading,
+                    errorMessage,
+                    successMessage,
+                    sendCode,
+                    login
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

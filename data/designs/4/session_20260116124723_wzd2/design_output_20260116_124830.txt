@@ -1,0 +1,133 @@
+这是一份基于您上传的抽象3D视觉图像生成的完整电商KV视觉系统提示词。
+
+鉴于图片是一个结合了有机流体形态与几何立方体、且带有声波纹理的抽象物体，我将其定义为一款**概念性科技产品**——**“AURA 灵感共振仪” (AURA Resonance Stone)**。这是一款用于冥想、解压的触感反馈与光疗设备。
+
+---
+
+### 第一步：产品信息智能提取
+
+**【识别报告】**
+*   **品牌名称**：AURA LABS (基于视觉推断的虚拟品牌)
+*   **产品类型**：[智能硬件] - [冥想解压/光疗设备]
+*   **产品规格**：手持尺寸，约10cm x 10cm，不规则形态
+*   **核心卖点**：
+    1.  流体渐变美学 (Fluid Gradient Aesthetics)
+    2.  生物节律共振 (Bio-Rhythm Resonance)
+    3.  触感波纹反馈 (Haptic Wave Feedback)
+    4.  情绪调节光效 (Mood-Regulating Light)
+    5.  有机与几何的融合 (Fusion of Organic & Geometric)
+*   **主色调**：薄荷绿 (Mint Green #98FF98) + 梦幻紫 (Dreamy Lavender #E6E6FA) + 柔粉色 (Soft Peach #FFD1DC)
+*   **辅助色**：磨砂白 (Frosted White #F5F5F5)
+*   **设计风格**：C4D 3D渲染风格、酸性设计(Acid Graphics)、玻璃拟态、超现实主义
+*   **目标受众**：Z世代、设计从业者、高压脑力工作者、追求生活美学的科技用户
+*   **品牌调性**：空灵、治愈、未来感、艺术性
+*   **包装亮点**：产品本身的半透明磨砂质感与声波纹理浮雕
+
+---
+
+### 第二步：视觉风格选择
+
+**☑ 科技未来风格（冷色调、几何图形、数据可视化、蓝光效果）**
+*   *调整说明*：虽然选择科技风格，但鉴于产品配色，将调整为**“柔光未来主义 (Soft Futurism)”**。保留科技感的几何构图和光影，但去除黑暗赛博元素，使用图片中的明亮渐变色系，强调通透感和疗愈感。
+
+---
+
+### 第三步：文字排版效果选择
+
+**☑ 玻璃拟态卡片 + 半透明背景 + 柔和圆角（现代风）**
+*   *选择理由*：完美呼应产品本身的磨砂半透明材质，增强画面的统一性和高级感。
+
+---
+
+### 第四步：生成完整提示词系统
+
+#### 全局设置 (Global Settings)
+*   **文案排版格式**：**格式A - 中英堆叠** (中文在上大字号，英文在下小字号，居中或左对齐)
+*   **通用负面词**：(low quality, worst quality:1.4), dark, gloomy, dirty, messy, text error, watermark, distorted shape, ugly face, extra fingers, blurry, noise, jpeg artifacts.
+
+---
+
+#### 1. LOGO生成提示词
+**Prompt:**
+> **Chinese:** 极简主义LOGO设计，品牌名为"AURA"，无衬线字体，线条纤细优雅。结合流体圆形和正方形的几何图形，象征有机与科技的结合。配色使用薄荷绿和淡紫色的渐变。矢量图，白色背景，高质量。
+> **English:** Minimalist logo design, brand name "AURA", sans-serif font, thin and elegant lines. Combine fluid circular shapes with geometric squares to symbolize the fusion of organic and technology. Color scheme uses a gradient of mint green and lavender. Vector graphics, white background, high quality.
+
+---
+
+#### 2. 海报01 - 主KV视觉 (Hero Shot)
+**Prompt:**
+> **Chinese:** 电商主KV海报，9:16竖版。**核心主体**：严格还原上传的产品图，一个半透明的磨砂质感物体，左侧是圆润的有机流体形态（带有明显的声波/频率浮雕纹理），右侧融合为棱角分明的几何立方体。颜色为薄荷绿、柔粉色和淡紫色的梦幻渐变。**背景**：纯净的柔光实验室环境，背景中有模糊的玻璃折射光影。**排版**：画面中央放置产品。使用玻璃拟态卡片悬浮在底部，文字采用【格式A - 中英堆叠】。标题：“灵感共振 / RESONANCE STONE”。副标题：“触摸声音的形状 / Touch the Shape of Sound”。左上角放置AURA LOGO。
+> **English:** E-commerce Hero KV poster, 9:16 vertical ratio. **Core Subject**: Strictly restore the uploaded product image, a translucent frosted texture object, left side is a rounded organic fluid shape (with distinct sound wave/frequency embossed texture), right side merges into a sharp geometric cube. Colors are a dreamy gradient of mint green, soft peach, and lavender. **Background**: Clean soft-light laboratory environment, with blurred glass refraction light and shadow in the background. **Layout**: Product placed in the center. Use a glassmorphism card suspended at the bottom, text uses [Format A - Stacked]. Title: "灵感共振 / RESONANCE STONE". Subtitle: "触摸声音的形状 / Touch the Shape of Sound". Top left corner places AURA LOGO. --ar 9:16 --v 6.0
+
+---
+
+#### 3. 海报02 - 生活场景 (Lifestyle)
+**Prompt:**
+> **Chinese:** 生活场景海报。**场景**：一个阳光明媚的极简主义白色客厅，光线柔和。**模特**：一位穿着白色亚麻家居服的年轻亚洲女性，手部特写，她正轻轻握着“AURA灵感共振仪”（严格还原产品：薄荷绿与紫色的渐变、流体与方块结合的形态、声波纹理）。**氛围**：宁静、治愈、放松。**排版**：文字位于图片上方空白处，【格式A】。标题：“此刻静谧 / MOMENT OF PEACE”。文案：“感知指尖的律动 / Feel the rhythm at your fingertips”。玻璃拟态文本框。
+> **English:** Lifestyle poster. **Scene**: A sunny minimalist white living room, soft lighting. **Model**: Close-up of hands of a young Asian woman wearing white linen loungewear, gently holding the "AURA Resonance Stone" (Strictly restore product: gradient of mint green and purple, fluid mixed with cube shape, sound wave texture). **Atmosphere**: Peaceful, healing, relaxing. **Layout**: Text located in the upper negative space, [Format A]. Title: "此刻静谧 / MOMENT OF PEACE". Copy: "感知指尖的律动 / Feel the rhythm at your fingertips". Glassmorphism text box. --ar 9:16 --v 6.0
+
+---
+
+#### 4. 海报03 - 工艺/概念可视化 (Process/Concept)
+**Prompt:**
+> **Chinese:** 概念可视化海报。**视觉主体**：AURA产品悬浮在空中，产品表面的“声波纹理”正在向外扩散出肉眼可见的彩色光波涟漪，演示声波共振技术。**特效**：光波呈现薄荷绿和粉色的粒子效果，穿透周围的空气。背景是深邃但干净的银灰色，突出光的流动。**排版**：底部居中，【格式A】。标题：“声波同频 / SONIC RESONANCE”。卖点：“40Hz 深度疗愈频率 / 40Hz Deep Healing Frequency”。
+> **English:** Concept visualization poster. **Subject**: The AURA product suspended in mid-air, the "sound wave texture" on the product surface is diffusing visible colorful light wave ripples outwards, demonstrating sonic resonance technology. **Effects**: Light waves appear as mint green and pink particle effects, penetrating the surrounding air. Background is deep but clean silver-grey to highlight the flow of light. **Layout**: Bottom center, [Format A]. Title: "声波同频 / SONIC RESONANCE". Selling Point: "40Hz 深度疗愈频率 / 40Hz Deep Healing Frequency". --ar 9:16 --v 6.0
+
+---
+
+#### 5. 海报04 - 细节特写01 (Detail - Texture)
+**Prompt:**
+> **Chinese:** 极度微距特写海报。**焦点**：聚焦于产品左侧的“声波浮雕纹理”。展示磨砂玻璃的细腻颗粒感，以及光线透过半透明材质时产生的焦散效果（Caustics）。颜色从粉色过渡到紫色。**视觉感受**：高级、通透、触感真实。**排版**：右下角，玻璃拟态标签，【格式A】。标题：“亲肤磨砂 / SKIN-FRIENDLY TEXTURE”。说明：“AG玻璃工艺 / Anti-Glare Glass Process”。
+> **English:** Extreme macro close-up poster. **Focus**: Focus on the "sound wave embossed texture" on the left side of the product. Show the fine graininess of frosted glass and the caustic effects produced when light passes through the translucent material. Color transitions from pink to purple. **Visual Feel**: High-end, translucent, tactile realism. **Layout**: Bottom right, glassmorphism label, [Format A]. Title: "亲肤磨砂 / SKIN-FRIENDLY TEXTURE". Description: "AG玻璃工艺 / Anti-Glare Glass Process". --ar 9:16 --v 6.0
+
+---
+
+#### 6. 海报05 - 细节特写02 (Detail - Form)
+**Prompt:**
+> **Chinese:** 几何美学特写海报。**焦点**：展示产品从“有机流体”向“几何立方体”过渡的交界处。柔和的曲线与锐利的直线形成对比。光影强调棱角的立体感。**配色**：薄荷绿为主。**排版**：左侧居中，【格式A】。标题：“形态融合 / FORM FUSION”。说明：“有机与理性的平衡 / Balance of Organic & Rational”.
+> **English:** Geometric aesthetic close-up poster. **Focus**: Show the transition boundary from "organic fluid" to "geometric cube" on the product. Contrast between soft curves and sharp straight lines. Light and shadow emphasize the three-dimensionality of the edges. **Color**: Predominantly mint green. **Layout**: Center left, [Format A]. Title: "形态融合 / FORM FUSION". Description: "有机与理性的平衡 / Balance of Organic & Rational". --ar 9:16 --v 6.0
+
+---
+
+#### 7. 海报06 - 细节特写03 (Detail - Light)
+**Prompt:**
+> **Chinese:** 功能展示海报。**视觉**：在微暗的环境中，AURA产品内部发出柔和的呼吸灯光，整个半透明机身像玉石一样发光。光色为治愈的暖紫色。**背景**：暗色调的磨砂背景，衬托发光主体。**排版**：顶部居中，【格式A】。标题：“情绪光疗 / MOOD LIGHTING”。说明：“智能呼吸灯效 / Smart Breathing Light Effect”。
+> **English:** Function display poster. **Visual**: In a slightly dim environment, the AURA product emits a soft breathing light from within, the entire translucent body glowing like jade. The light color is a healing warm purple. **Background**: Dark tone frosted background to highlight the glowing subject. **Layout**: Top center, [Format A]. Title: "情绪光疗 / MOOD LIGHTING". Description: "智能呼吸灯效 / Smart Breathing Light Effect". --ar 9:16 --v 6.0
+
+---
+
+#### 8. 海报07 - 用户评价 (Review)
+**Prompt:**
+> **Chinese:** 用户评价海报。**背景**：虚化的产品侧面图，透过毛玻璃看产品的效果，朦胧美。**排版**：画面中央三个浮起的玻璃拟态卡片，垂直排列。
+> 卡片1内容：“★★★★★ 放在桌面上就是艺术品 / A piece of art on the desk.”
+> 卡片2内容：“★★★★★ 震动反馈非常解压 / The vibration feedback is very stress-relieving.”
+> 卡片3内容：“★★★★★ 颜色的渐变太美了 / The color gradient is just beautiful.”
+> 底部CTA按钮：“查看更多评价 / VIEW MORE REVIEWS →”。
+> **English:** User review poster. **Background**: Blurred side view of the product, effect of looking at the product through frosted glass, hazy beauty. **Layout**: Three floating glassmorphism cards in the center, arranged vertically. Card 1: "★★★★★ 放在桌面上就是艺术品 / A piece of art on the desk." Card 2: "★★★★★ 震动反馈非常解压 / The vibration feedback is very stress-relieving." Card 3: "★★★★★ 颜色的渐变太美了 / The color gradient is just beautiful." Bottom CTA button: "查看更多评价 / VIEW MORE REVIEWS →". --ar 9:16 --v 6.0
+
+---
+
+#### 9. 海报08 - 配色灵感 (Moodboard)
+**Prompt:**
+> **Chinese:** 品牌故事/情绪板海报。**视觉**：拼贴艺术风格。画面分为几个色块区域，展示薄荷叶(绿色)、薰衣草(紫色)、水蜜桃(粉色)的摄影特写，与AURA产品的局部特写无缝融合。表现产品的自然色彩灵感来源。**排版**：中心大标题【格式A】。标题：“自然灵感 / NATURE INSPIRED”。底部色卡展示三个主色HEX值：#98FF98 | #E6E6FA | #FFD1DC。
+> **English:** Brand story/moodboard poster. **Visual**: Collage art style. Screen divided into color block areas, showing photography close-ups of mint leaves (green), lavender (purple), and peach (pink), seamlessly merged with partial close-ups of the AURA product. Expressing the natural color inspiration of the product. **Layout**: Center large title [Format A]. Title: "自然灵感 / NATURE INSPIRED". Bottom color swatches showing three main HEX values: #98FF98 | #E6E6FA | #FFD1DC. --ar 9:16 --v 6.0
+
+---
+
+#### 10. 海报09 - 产品参数表 (Specifications)
+**Prompt:**
+> **Chinese:** 参数规格海报。**背景**：极简的灰白色渐变背景，右下角有淡淡的产品轮廓水印。**排版**：左侧是一个清晰的表格，使用细线和玻璃拟态背景。
+> 表头：“产品参数 / SPECIFICATIONS”
+> 行1：“材质 Material | 磨砂树脂/AG玻璃 Frosted Resin/AG Glass”
+> 行2：“尺寸 Size | 98 x 98 x 45 mm”
+> 行3：“重量 Weight | 210g”
+> 行4：“续航 Battery | 12小时/Hours”
+> 行5：“接口 Port | USB Type-C”
+> **English:** Specifications poster. **Background**: Minimalist off-white gradient background, faint product outline watermark in bottom right. **Layout**: A clear table on the left, using thin lines and glassmorphism background. Header: "产品参数 / SPECIFICATIONS". Row 1: "材质 Material | 磨砂树脂/AG玻璃 Frosted Resin/AG Glass". Row 2: "尺寸 Size | 98 x 98 x 45 mm". Row 3: "重量 Weight | 210g". Row 4: "续航 Battery | 12小时/Hours". Row 5: "接口 Port | USB Type-C". --ar 9:16 --v 6.0
+
+---
+
+#### 11. 海报10 - 包装清单/CTA (Package & CTA)
+**Prompt:**
+> **Chinese:** 包装清单与购买海报。**视觉**：俯视角度。精致的极简白色礼盒打开，AURA产品躺在丝绒内衬中，旁边整齐摆放着Type-C数据线和说明书。礼盒上有银色烫金的LOGO。**排版**：底部大面积留白。巨大的CTA按钮，半透明霓虹边框。按钮文字：“立即拥有 / SHOP NOW →”。上方小字：“全国包邮 / Free Shipping”。
+> **English:** Package list and purchase poster. **Visual**: Top-down view. Exquisite minimalist white gift box opened, AURA product lying in velvet lining, Type-C cable and manual neatly arranged beside it. Silver hot stamping LOGO on the box. **Layout**: Large negative space at the bottom. Huge CTA button, translucent neon border. Button text: "立即拥有 / SHOP NOW →". Small text above: "全国包邮 / Free Shipping". --ar 9:16 --v 6.0

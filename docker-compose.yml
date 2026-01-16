@@ -1,0 +1,13 @@
+services:
+  poster-generator:
+    build: .
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Shanghai
+    restart: unless-stopped

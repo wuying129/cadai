@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>品牌视觉工坊 | 高端 AI 生成</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Noto+Serif+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#F9F7F2', 'paper-light': '#FFFEFA', 'ink': '#2C2420', 'ink-light': '#585350',
+                        'gold': '#C68E5D', 'gold-dim': '#AB7F55', 'sage': '#8DA399', 'stone': '#E5E0D8',
+                    },
+                    fontFamily: { serif: ['"Noto Serif SC"', '"Playfair Display"', 'serif'], sans: ['"Lato"', 'sans-serif'], },
+                    boxShadow: { 'layer': '0 10px 30px -10px rgba(44, 36, 32, 0.08)', 'float': '0 20px 40px -10px rgba(44, 36, 32, 0.15)', 'glow': '0 0 20px rgba(198, 142, 93, 0.3)', },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Lato', sans-serif; background-color: #F9F7F2; color: #2C2420; overflow-x: hidden; }
+        .bg-noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .blob-bg { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.4; animation: blob 10s infinite; }
+        @keyframes blob { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-50px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.8s ease-out forwards; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #D1CDC7; border-radius: 3px; }
+        .drip-loader { width: 4px; height: 40px; background: #C68E5D; margin: 0 auto; position: relative; animation: drip 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        .drip-loader::after { content: ''; position: absolute; bottom: -10px; left: -8px; width: 20px; height: 20px; background: #C68E5D; border-radius: 50%; opacity: 0; animation: splash 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        @keyframes drip { 0% { height: 0; opacity: 0; transform: translateY(-20px); } 30% { height: 40px; opacity: 1; transform: translateY(0); } 80%,100% { height: 0; opacity: 0; transform: translateY(20px); } }
+        @keyframes splash { 0%,75% { transform: scale(0); opacity: 0; } 80% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
+        @keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 20%,100% { transform: translateX(200%) rotate(45deg); } }
+        .animate-shine { animation: shine 3s infinite linear; }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; } .fade-enter-from, .fade-leave-to { opacity: 0; }
+        .stagger-enter-active, .stagger-leave-active { transition: all 0.5s ease; } .stagger-enter-from, .stagger-leave-to { opacity: 0; transform: translateY(20px); }
+        [v-cloak] { display: none; }
+        .stage-dot.active { transform: scale(1.3); box-shadow: 0 0 12px rgba(198, 142, 93, 0.6); }
+        .stage-dot.completed { background-color: #8DA399 !important; border-color: #8DA399 !important; }
+        .download-btn { transition: all 0.3s; } .download-btn:hover { transform: translateY(-2px); }
+        .download-toast { animation: toastIn 0.3s ease-out; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(10px) translateX(-50%); } to { opacity: 1; transform: translateY(0) translateX(-50%); } }
+
+        /* 灵感光环动画样式 */
+        .aura-ring {
+            border: 1px solid rgba(198, 142, 93, 0.3);
+            border-top-color: #C68E5D;
+            border-radius: 50%;
+            animation: auraSpin 3s linear infinite;
+        }
+        .aura-inner {
+            background: radial-gradient(circle, rgba(198, 142, 93, 0.2) 0%, rgba(249, 247, 242, 0) 70%);
+            animation: breathe 4s ease-in-out infinite;
+        }
+        @keyframes auraSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .text-shimmer {
+            background: linear-gradient(90deg, #2C2420 0%, #C68E5D 50%, #2C2420 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        .progress-glow {
+            box-shadow: 0 0 10px rgba(198, 142, 93, 0.5);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="bg-noise"></div>
+    <div class="blob-bg w-96 h-96 bg-gold/20 -top-[10%] -left-[10%]"></div>
+    <div class="blob-bg w-80 h-80 bg-stone/50 bottom-[10%] -right-[5%]"></div>
+
+    <div id="app" v-cloak class="relative z-10 min-h-screen flex flex-col">
+        <header class="sticky top-0 z-50 backdrop-blur-md bg-paper/80 border-b border-stone/50">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                <div class="w-24">
+                    <button v-if="step === 3" @click="showResetModal = true" class="group flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-ink-light hover:text-gold transition-colors">
+                        <span class="w-8 h-[1px] bg-ink-light group-hover:bg-gold transition-colors"></span>返回
+                    </button>
+                    <div v-else class="w-8 h-8 rounded-full border border-stone flex items-center justify-center"><i class="fas fa-bars text-ink-light text-xs"></i></div>
+                </div>
+                <h1 class="font-serif text-2xl text-ink font-bold italic">Atelier<span class="text-gold">.</span>AI</h1>
+                <div class="flex items-center gap-4">
+                    <!-- API状态 -->
+                    <div :class="isApiOnline ? 'bg-green-500' : 'bg-red-500'" class="w-2 h-2 rounded-full animate-pulse" :title="apiStatus"></div>
+                    <!-- 我的作品按钮 -->
+                    <a v-if="currentUser" href="/history" class="px-4 py-2 bg-stone/30 hover:bg-stone/50 text-ink rounded-lg shadow-sm hover:shadow transition-all text-xs font-bold tracking-widest uppercase flex items-center gap-2">
+                        <i class="fas fa-folder-open text-[10px]"></i>
+                        我的作品
+                    </a>
+                    <!-- 用户状态 -->
+                    <div v-if="currentUser" class="relative user-menu-container">
+                        <div @click.stop="showUserMenu = !showUserMenu" class="w-8 h-8 rounded-full bg-gold text-white flex items-center justify-center font-bold text-sm uppercase cursor-pointer hover:ring-2 hover:ring-gold/50 transition-all">{{ currentUser.email.charAt(0) }}</div>
+                        <!-- 下拉菜单 -->
+                        <div v-if="showUserMenu" class="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-float border border-stone/30 py-1 z-50">
+                            <a href="/credits" class="block px-4 py-2 text-sm text-ink hover:bg-stone/20 transition-colors">积分管理</a>
+                            <div class="border-t border-stone/30 my-1"></div>
+                            <button @click="logout" class="w-full text-left px-4 py-2 text-sm text-ink hover:bg-stone/20 transition-colors">退出登录</button>
+                        </div>
+                    </div>
+                    <a v-else href="/login" class="text-xs text-ink-light hover:text-gold transition-colors">未登录</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow flex flex-col items-center justify-center p-6 relative">
+            <!-- Step 1 -->
+            <transition name="stagger">
+                <div v-if="step === 1" class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch animate-fade-up">
+                    <!-- 第一列：产品说明 -->
+                    <div class="flex flex-col">
+                        <div class="mb-4">
+                            <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">01. 需求简报</span>
+                            <h2 class="font-serif text-3xl text-ink leading-tight mb-3">产品说明</h2>
+                            <p class="text-ink-light font-light text-sm leading-relaxed">请告诉我们您的产品哲学、核心工艺以及您希望触达的情感共鸣。</p>
+                        </div>
+                        <div class="relative group flex-1">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-stone to-white rounded-lg opacity-50 blur group-hover:opacity-75 transition duration-500"></div>
+                            <div class="relative bg-paper-light border border-stone rounded-lg p-1 shadow-layer focus-within:ring-1 focus-within:ring-gold/50 transition-all h-full">
+                                <textarea v-model="productDesc" class="w-full h-full bg-transparent border-none p-4 text-ink placeholder-stone/80 focus:ring-0 resize-none font-serif text-base leading-relaxed outline-none min-h-[280px]" placeholder="例如：这不仅是一个咖啡杯，更是清晨冥想的容器。采用粗陶手作..."></textarea>
+                                <div class="absolute bottom-4 right-4 text-[10px] text-gold/60 font-bold tracking-widest flex items-center gap-1"><i class="fas fa-magic"></i> AI 写作助手就绪</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 第二列：产品细节图 -->
+                    <div class="space-y-6">
+                        <div>
+                            <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">02. 视觉素材</span>
+                            <div class="flex justify-between items-end mb-3">
+                                <h2 class="font-serif text-3xl text-ink">产品细节图</h2>
+                                <span class="text-xs text-ink-light bg-stone/30 px-2 py-1 rounded">{{ uploadedImages.length }} / 9</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div v-if="uploadedImages.length < 9" @click="$refs.fileInput.click()" class="aspect-[3/4] border border-dashed border-gold/40 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gold/5 transition-all group hover:border-gold">
+                                <div class="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center mb-2 group-hover:scale-110 group-hover:bg-gold group-hover:text-white transition-all"><i class="fas fa-plus text-xs"></i></div>
+                                <span class="text-[9px] text-ink-light tracking-widest uppercase group-hover:text-gold">添加图片</span>
+                                <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" multiple class="hidden">
+                            </div>
+                            <div v-for="(img, idx) in uploadedImages" :key="img.id" class="relative group aspect-[3/4]">
+                                <div class="absolute inset-0 bg-white p-1.5 pb-4 shadow-layer rotate-1 group-hover:rotate-0 transition-transform duration-300 rounded-sm">
+                                    <img :src="img.preview" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                                </div>
+                                <button @click="uploadedImages.splice(idx, 1)" class="absolute -top-2 -right-2 bg-ink text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 hover:bg-red-500 transition-all z-10 shadow-lg"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 第三列：海报选择器 -->
+                    <div class="flex flex-col">
+                        <div class="mb-4">
+                            <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">03. 选择海报</span>
+                            <div class="flex justify-between items-end">
+                                <h2 class="font-serif text-3xl text-ink">选择要生成的海报</h2>
+                                <div class="flex gap-2">
+                                    <button @click="selectAllPosters" class="text-[10px] text-ink-light hover:text-gold transition-colors">全选</button>
+                                    <span class="text-stone">|</span>
+                                    <button @click="deselectAllPosters" class="text-[10px] text-ink-light hover:text-gold transition-colors">清空</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-4 gap-y-1 mb-4">
+                            <div
+                                v-for="poster in posterOptions"
+                                :key="poster.id"
+                                @click="togglePoster(poster)"
+                                class="flex items-center gap-2 py-1.5 cursor-pointer group"
+                            >
+                                <div :class="poster.selected ? 'bg-gold border-gold' : 'border-stone/50'" class="w-4 h-4 rounded border flex items-center justify-center transition-all">
+                                    <i v-if="poster.selected" class="fas fa-check text-white text-[8px]"></i>
+                                </div>
+                                <span :class="poster.selected ? 'text-ink' : 'text-ink-light'" class="text-xs group-hover:text-gold transition-colors">{{ poster.name }}</span>
+                            </div>
+                        </div>
+                        <!-- 积分预估和开始按钮 - 底部对齐 -->
+                        <div class="mt-auto pt-4 border-t border-stone/50 space-y-3">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-ink-light">已选 <span class="text-gold font-bold">{{ selectedPostersCount }}</span> 张</span>
+                                <span class="text-ink">预计 <span class="text-gold font-bold">{{ estimatedCredits }}</span> 积分</span>
+                            </div>
+                            <!-- 积分不足提示（仅已登录且积分不足时显示） -->
+                            <transition name="fade">
+                                <div v-if="currentUser && (currentUser.credits || 0) < estimatedCredits && selectedPostersCount > 0" class="bg-red-50 border border-red-200 px-3 py-2 rounded-lg text-center">
+                                    <p class="text-red-600 text-xs">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        积分不足！还需 <span class="font-bold">{{ estimatedCredits - (currentUser.credits || 0) }}</span> 积分
+                                        <a href="/credits" class="text-gold underline ml-2">去充值</a>
+                                    </p>
+                                </div>
+                            </transition>
+                            <button @click="startGeneration" :disabled="!canSubmit" :class="canSubmit ? 'bg-ink text-white hover:bg-gold hover:shadow-glow active:scale-95' : 'bg-stone text-white cursor-not-allowed'" class="relative overflow-hidden group w-full py-3 rounded-lg font-bold tracking-widest text-xs uppercase transition-all flex items-center justify-center gap-2">
+                                <span class="relative z-10 flex items-center gap-2">开始创作 <i class="fas fa-long-arrow-alt-right group-hover:translate-x-1 transition-transform"></i></span>
+                                <div v-if="canSubmit" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] blur-sm animate-shine"></div>
+                            </button>
+                            <!-- 未登录提示 -->
+                            <transition name="fade">
+                                <div v-if="loginWarning" class="bg-gold/10 border border-gold/30 px-3 py-2 rounded-lg text-center">
+                                    <p class="text-gold text-xs font-serif">
+                                        <i class="fas fa-exclamation-circle mr-1"></i>未登录，即将跳转到登录页...
+                                    </p>
+                                </div>
+                            </transition>
+                            <!-- 积分不足提示（点击按钮后显示） -->
+                            <transition name="fade">
+                                <div v-if="creditsWarning" class="bg-red-50 border border-red-200 px-3 py-2 rounded-lg text-center">
+                                    <p class="text-red-600 text-xs">
+                                        <i class="fas fa-coins mr-1"></i>积分不足！请先 <a href="/credits" class="text-gold underline font-bold">充值</a>
+                                    </p>
+                                </div>
+                            </transition>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+
+            <!-- Step 2 -->
+            <transition name="stagger">
+                <div v-if="step === 2" class="w-full h-[70vh] flex flex-col items-center justify-center relative z-20">
+
+                    <div class="relative w-64 h-64 mb-12 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-gold/5 rounded-full blur-3xl animate-pulse"></div>
+
+                        <div class="absolute inset-0 aura-ring border-[1px] opacity-60" style="animation-duration: 8s;"></div>
+                        <div class="absolute inset-4 aura-ring border-[1px] opacity-80" style="animation-direction: reverse; animation-duration: 5s;"></div>
+
+                        <div class="w-32 h-32 rounded-full aura-inner flex items-center justify-center backdrop-blur-sm relative z-10">
+                            <span class="font-serif text-4xl text-gold italic">{{ taskProgress }}<span class="text-base not-italic ml-1">%</span></span>
+                        </div>
+
+                        <div class="absolute top-0 left-1/2 w-1 h-1 bg-gold rounded-full animate-ping"></div>
+                        <div class="absolute bottom-10 right-10 w-1.5 h-1.5 bg-ink/20 rounded-full animate-pulse"></div>
+                    </div>
+
+                    <div class="text-center space-y-4 max-w-lg mx-auto px-6">
+                        <h2 class="font-serif text-3xl md:text-4xl text-shimmer font-bold tracking-wide">
+                            {{ currentStageName }}
+                        </h2>
+
+                        <transition mode="out-in" name="fade">
+                            <p :key="taskMessage" class="text-ink-light/80 text-sm font-light tracking-widest uppercase h-6">
+                                {{ taskMessage || '正在调配视觉元素...' }}
+                            </p>
+                        </transition>
+                    </div>
+
+                    <div class="w-64 md:w-96 mt-10 relative">
+                        <div class="h-[2px] w-full bg-stone/30 rounded-full overflow-hidden">
+                            <div class="h-full bg-gold progress-glow transition-all duration-700 ease-out"
+                                 :style="{ width: taskProgress + '%' }">
+                            </div>
+                        </div>
+                        <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-1 bg-stone rounded-full"></div>
+                        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-1 bg-stone rounded-full"></div>
+                    </div>
+
+                    <transition name="fade">
+                        <div v-if="taskError" class="absolute bottom-10 bg-red-50/90 backdrop-blur border border-red-200 px-6 py-4 rounded-lg shadow-float text-center">
+                            <p class="text-red-800 font-serif mb-2">创作遇到了阻碍</p>
+                            <p class="text-xs text-red-600 mb-3">{{ taskError }}</p>
+                            <button @click="confirmReset" class="text-xs border-b border-red-400 text-red-700 hover:text-red-900 pb-0.5">重置画布</button>
+                        </div>
+                    </transition>
+
+                </div>
+            </transition>
+
+            <!-- Step 3 -->
+            <transition name="stagger">
+                <div v-if="step === 3" class="w-full max-w-7xl">
+                    <div class="flex flex-col md:flex-row items-end justify-between mb-16 px-4 border-b border-ink/10 pb-8">
+                        <div>
+                            <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">系列就绪</span>
+                            <h2 class="font-serif text-5xl text-ink">{{ projectName }}</h2>
+                            <p class="text-ink-light text-sm mt-2">成功生成 {{ generatedPosters.length }} 张海报</p>
+                        </div>
+                        <div class="flex gap-4 mt-6 md:mt-0">
+                            <button @click="showResetModal = true" class="px-6 py-3 border border-stone rounded hover:border-gold hover:text-gold transition-all text-xs font-bold tracking-widest uppercase">新建项目</button>
+                            <button @click="downloadAll" class="px-6 py-3 bg-ink text-white rounded shadow-layer hover:bg-gold hover:shadow-glow transition-all text-xs font-bold tracking-widest uppercase flex items-center gap-2"><i class="fas fa-download"></i> 下载全部</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+                        <div v-for="(poster, index) in sortedPosters" :key="poster.id" class="group cursor-pointer animate-fade-up" :style="{ animationDelay: index * 100 + 'ms' }">
+                            <div class="relative bg-white p-3 pb-8 shadow-layer hover:shadow-float transition-all duration-500 transform group-hover:-translate-y-2 group-hover:ring-1 group-hover:ring-gold/20">
+                                <div class="relative overflow-hidden bg-stone/10 aspect-[3/4] mb-4" @click="viewImage(poster)">
+                                    <img :src="poster.url" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                                    <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                        <div class="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center scale-50 group-hover:scale-100 transition-transform hover:text-gold"><i class="fas fa-expand-alt text-ink"></i></div>
+                                    </div>
+                                </div>
+                                <div class="px-2">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-[10px] text-stone font-bold border border-stone px-1 rounded">{{ poster.number }}</span>
+                                        <button @click.stop="downloadPoster(poster)" class="download-btn flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold text-ink-light hover:text-white hover:bg-gold transition-all"><i class="fas fa-arrow-down text-[8px]"></i><span class="hidden sm:inline">下载</span></button>
+                                    </div>
+                                    <h3 class="font-serif text-xl text-ink leading-none mb-1">{{ poster.mainTitle }}</h3>
+                                    <p class="text-[10px] text-gold font-bold tracking-widest uppercase">{{ poster.subTitle }}</p>
+                                </div>
+                                <transition name="fade"><div v-if="poster.showDownloadToast" class="download-toast absolute bottom-2 left-1/2 -translate-x-1/2 bg-ink text-white text-[10px] px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg"><i class="fas fa-check-circle text-green-400"></i>已开始下载</div></transition>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-20"></div>
+                </div>
+            </transition>
+        </main>
+
+        <!-- Reset Modal -->
+        <transition name="fade">
+            <div v-if="showResetModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-ink/60 backdrop-blur-sm" @click.self="showResetModal = false">
+                <div class="bg-paper-light rounded-xl shadow-float max-w-md w-full mx-6 overflow-hidden">
+                    <div class="h-1 bg-gradient-to-r from-gold via-gold-dim to-gold"></div>
+                    <div class="p-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gold/10 flex items-center justify-center"><i class="fas fa-exclamation-triangle text-gold text-2xl"></i></div>
+                        <h3 class="font-serif text-2xl text-ink mb-3">确定要返回吗？</h3>
+                        <p class="text-ink-light text-sm mb-8">返回将开启新的创作会话，当前内容将丢失。</p>
+                        <div class="flex gap-4">
+                            <button @click="showResetModal = false" class="flex-1 px-6 py-3 border border-stone rounded-lg text-ink font-bold text-sm hover:border-ink transition-all">取消</button>
+                            <button @click="confirmReset" class="flex-1 px-6 py-3 bg-gold text-white rounded-lg font-bold text-sm hover:bg-gold-dim transition-all flex items-center justify-center gap-2"><i class="fas fa-check"></i>确认返回</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+
+        <!-- Edit Lightbox -->
+        <transition name="fade">
+            <div v-if="lightbox.isOpen" class="fixed inset-0 z-[100] bg-ink/90 backdrop-blur-sm">
+                <!-- Header -->
+                <div class="absolute top-0 left-0 right-0 h-16 flex items-center justify-between px-6 bg-ink/50 backdrop-blur z-50">
+                    <h2 class="font-serif text-xl text-white">{{ lightbox.currentImage?.title }}</h2>
+                    <div class="flex items-center gap-4">
+                        <button @click="downloadCurrentVersion" class="px-4 py-2 bg-white/10 hover:bg-gold text-white rounded-lg text-xs font-bold uppercase transition-all">
+                            <i class="fas fa-download mr-2"></i>下载
+                        </button>
+                        <button @click="closeLightbox" class="text-white/50 hover:text-white hover:rotate-90 transition-all text-2xl">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Content: 三栏布局 -->
+                <div class="absolute top-16 left-0 right-0 bottom-0 flex">
+                    <!-- 左侧：版本历史 -->
+                    <div class="w-28 bg-ink/30 backdrop-blur border-r border-white/10 overflow-y-auto">
+                        <div class="p-4 space-y-3">
+                            <div
+                                v-for="(version, index) in posterVersions"
+                                :key="version.version"
+                                @click="switchVersion(index)"
+                                :class="currentVersionIndex === index ? 'ring-2 ring-gold' : 'opacity-60 hover:opacity-100'"
+                                class="relative cursor-pointer transition-all group"
+                            >
+                                <div class="aspect-[3/4] bg-white/5 rounded overflow-hidden">
+                                    <img :src="version.thumbnail_url" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 中间：图片预览/编辑区 -->
+                    <div class="flex-1 flex items-center justify-center p-6 relative">
+                        <div class="relative max-w-full max-h-full">
+                            <!-- 图片 -->
+                            <img
+                                :id="'edit-image-' + currentVersionIndex"
+                                :src="posterVersions[currentVersionIndex]?.full_url"
+                                class="max-w-full max-h-[calc(100vh-10rem)] object-contain"
+                                @load="onImageLoaded"
+                            >
+                            <!-- Canvas 涂抹层（仅局部修改时显示） -->
+                            <canvas
+                                v-if="editType === 'partial'"
+                                ref="editCanvas"
+                                @mousedown="startDrawing"
+                                @mousemove="draw"
+                                @mouseup="stopDrawing"
+                                @mouseleave="stopDrawing"
+                                class="absolute top-0 left-0 cursor-crosshair"
+                                style="touch-action: none;"
+                            ></canvas>
+                        </div>
+
+                        <!-- 画笔工具栏（局部修改时显示） -->
+                        <transition name="fade">
+                            <div v-if="editType === 'partial'" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur rounded-lg shadow-float px-4 py-3 flex items-center gap-4">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-paint-brush text-gold"></i>
+                                    <span class="text-xs text-ink-light">画笔:</span>
+                                    <input
+                                        type="range"
+                                        v-model="brushSize"
+                                        min="10"
+                                        max="100"
+                                        class="w-24"
+                                    >
+                                    <span class="text-xs text-ink w-8">{{ brushSize }}</span>
+                                </div>
+                                <div class="h-6 w-px bg-stone"></div>
+                                <button @click="undoCanvas" :disabled="canvasHistory.length === 0" class="p-2 hover:bg-stone/20 rounded transition-colors disabled:opacity-30">
+                                    <i class="fas fa-undo text-ink"></i>
+                                </button>
+                                <button @click="redoCanvas" :disabled="canvasRedoStack.length === 0" class="p-2 hover:bg-stone/20 rounded transition-colors disabled:opacity-30">
+                                    <i class="fas fa-redo text-ink"></i>
+                                </button>
+                                <button @click="clearCanvas" class="p-2 hover:bg-stone/20 rounded transition-colors">
+                                    <i class="fas fa-eraser text-ink"></i>
+                                </button>
+                            </div>
+                        </transition>
+                    </div>
+
+                    <!-- 右侧：操作面板 -->
+                    <div class="w-96 bg-paper border-l border-stone/30 overflow-y-auto">
+                        <div class="p-6 space-y-6">
+                            <!-- Tab 切换 -->
+                            <div class="flex gap-2 border-b border-stone/50 pb-4">
+                                <button
+                                    @click="editType = 'full'"
+                                    :class="editType === 'full' ? 'bg-ink text-white' : 'bg-stone/20 text-ink-light hover:bg-stone/40'"
+                                    class="flex-1 py-3 rounded-lg font-bold text-xs uppercase tracking-widest transition-all"
+                                >
+                                    全图修改
+                                </button>
+                                <button
+                                    @click="editType = 'partial'"
+                                    :class="editType === 'partial' ? 'bg-ink text-white' : 'bg-stone/20 text-ink-light hover:bg-stone/40'"
+                                    class="flex-1 py-3 rounded-lg font-bold text-xs uppercase tracking-widest transition-all"
+                                >
+                                    局部修改
+                                </button>
+                            </div>
+
+                            <!-- 提示词输入 -->
+                            <div>
+                                <label v-if="editType === 'partial'" class="block text-xs font-bold tracking-widest uppercase text-gold mb-2">
+                                    请在左图圈出需要修改的部分
+                                </label>
+                                <label class="block text-xs font-bold tracking-widest uppercase text-gold mb-2" :class="editType === 'partial' ? 'mt-4' : ''">
+                                    请输入修改要求：
+                                </label>
+                                <textarea
+                                    v-model="editPrompt"
+                                    rows="4"
+                                    class="w-full bg-transparent border border-stone/50 rounded-lg px-4 py-3 text-ink placeholder-stone/80 focus:ring-1 focus:ring-gold/50 focus:border-gold outline-none font-serif resize-none"
+                                    placeholder="例如：将背景改为深色调，增加产品光泽感..."
+                                ></textarea>
+                            </div>
+
+                            <!-- 参考图上传 -->
+                            <div>
+                                <label class="block text-xs font-bold tracking-widest uppercase text-gold mb-2">
+                                    您可以提供参考图（最多9张）：
+                                </label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div
+                                        v-if="editReferenceImages.length < 9"
+                                        @click="$refs.editFileInput.click()"
+                                        class="aspect-square border border-dashed border-gold/40 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gold/5 transition-all group hover:border-gold"
+                                    >
+                                        <i class="fas fa-plus text-gold/30 group-hover:text-gold text-xl"></i>
+                                        <input
+                                            type="file"
+                                            ref="editFileInput"
+                                            @change="handleEditFileChange"
+                                            accept="image/*"
+                                            multiple
+                                            class="hidden"
+                                        >
+                                    </div>
+                                    <div
+                                        v-for="(img, idx) in editReferenceImages"
+                                        :key="img.id"
+                                        class="relative group aspect-square"
+                                    >
+                                        <img :src="img.preview" class="w-full h-full object-cover rounded-lg">
+                                        <button
+                                            @click="editReferenceImages.splice(idx, 1)"
+                                            class="absolute -top-2 -right-2 bg-ink text-white w-6 h-6 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 hover:bg-red-500 transition-all shadow-lg"
+                                        >
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 编辑进度 -->
+                            <transition name="fade">
+                                <div v-if="isEditing" class="bg-gold/10 border border-gold/30 rounded-lg p-4">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-6 h-6 border-2 border-gold border-t-transparent rounded-full animate-spin"></div>
+                                        <span class="text-sm text-gold font-serif">{{ editTaskMessage }}</span>
+                                    </div>
+                                    <div class="h-1 bg-stone/30 rounded-full overflow-hidden">
+                                        <div
+                                            class="h-full bg-gold transition-all duration-500"
+                                            :style="{ width: editTaskProgress + '%' }"
+                                        ></div>
+                                    </div>
+                                </div>
+                            </transition>
+
+                            <!-- 积分说明 -->
+                            <div class="bg-stone/20 px-3 py-2 rounded-lg text-center">
+                                <p class="text-ink-light text-xs">
+                                    <i class="fas fa-coins text-gold mr-1"></i>
+                                    编辑一张图需要 <span class="text-gold font-bold">4</span> 积分
+                                </p>
+                            </div>
+
+                            <!-- 确认修改按钮 -->
+                            <button
+                                @click="confirmEdit"
+                                :disabled="!editPrompt || isEditing"
+                                :class="!editPrompt || isEditing ? 'bg-stone text-white cursor-not-allowed' : 'bg-ink text-white hover:bg-gold hover:shadow-glow active:scale-95'"
+                                class="w-full py-4 rounded-lg font-bold tracking-widest text-xs uppercase transition-all"
+                            >
+                                {{ isEditing ? '生成中...' : '确认修改' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+    </div>
+
+    <script>
+    // ========== 演示模式自动登录 ==========
+    (function() {
+        const DEMO_USER = {
+            id: 4,
+            email: "zhanbingqiang@gpulink.cc",
+            credits: 10000,
+            frozen: 0
+        };
+        const DEMO_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ6aGFuYmluZ3FpYW5nQGdwdWxpbmsuY2MiLCJleHAiOjE3NjkxNDM0MzZ9.7WRbUkjNvKVZzA_9q5hGWeI06OphFB34sMwGFOO_-bw";
+
+        // 如果没有 token，自动设置演示用户
+        if (!localStorage.getItem('access_token')) {
+            localStorage.setItem('access_token', DEMO_TOKEN);
+            localStorage.setItem('user', JSON.stringify(DEMO_USER));
+        }
+    })();
+    // ========== 演示模式自动登录结束 ==========
+
+    const { createApp } = Vue;
+    const API = '';
+    createApp({
+        data: () => ({
+            step: 1, productDesc: '', uploadedImages: [], isApiOnline: false, apiStatus: '检查中',
+            currentUser: null,  // 当前登录用户
+            showUserMenu: false,  // 是否显示用户下拉菜单
+            loginWarning: false,  // 是否显示登录提示
+            creditsWarning: false,  // 是否显示积分不足提示
+            userId: null,  // 登录用户的数据库 ID
+            uploadId: 'upload_' + Date.now(),  // 临时上传ID
+            sessionId: null,  // 后端生成的会话ID
+            // 海报选择器
+            posterOptions: [
+                { id: 0, name: '主KV视觉', desc: 'Hero Shot', selected: true },
+                { id: 1, name: '生活场景', desc: 'Lifestyle', selected: true },
+                { id: 2, name: '概念可视化', desc: 'Concept', selected: true },
+                { id: 3, name: '细节特写01', desc: 'Detail 01', selected: true },
+                { id: 4, name: '细节特写02', desc: 'Detail 02', selected: true },
+                { id: 5, name: '细节特写03', desc: 'Detail 03', selected: true },
+                { id: 6, name: '用户评价', desc: 'Review', selected: true },
+                { id: 7, name: '品牌故事', desc: 'Brand Story', selected: true },
+                { id: 8, name: '产品参数', desc: 'Specs', selected: true },
+                { id: 9, name: '使用指南', desc: 'Guide', selected: true }
+            ],
+            taskId: null, taskStatus: 'pending', taskProgress: 0, taskMessage: '', taskError: null,
+            stages: [{ name: '上传素材' }, { name: '分析产品' }, { name: '生成设计' }, { name: '生成海报' }, { name: '完成' }],
+            logs: [], showLogs: false, projectName: '品牌视觉系列', generatedPosters: [],
+            showResetModal: false, lightbox: { isOpen: false, currentImage: null }, poll: null,
+            // 编辑功能相关
+            editType: 'full',              // 'full' 或 'partial'
+            editPrompt: '',                // 修改提示词
+            editReferenceImages: [],       // 参考图列表
+            posterVersions: [],            // 版本历史
+            currentVersionIndex: 0,        // 当前查看的版本索引
+            editTaskId: null,              // 编辑任务ID
+            editTaskStatus: null,          // 编辑任务状态
+            editTaskProgress: 0,           // 编辑任务进度
+            editTaskMessage: '',           // 编辑任务消息
+            isEditing: false,              // 是否正在编辑中
+            canvasHistory: [],             // 画布历史（撤销用）
+            canvasRedoStack: [],           // 重做栈
+            isDrawing: false,              // 是否正在绘制
+            brushSize: 50,                 // 画笔大小
+            editPoll: null                 // 编辑任务轮询
+        }),
+        computed: {
+            canSubmit() { return this.productDesc && this.uploadedImages.length && this.selectedPostersCount > 0; },
+            canSubmitWithCredits() {
+                return this.canSubmit && this.currentUser && (this.currentUser.credits || 0) >= this.estimatedCredits;
+            },
+            currentStageIndex() { return { pending: 0, uploading: 0, processing: 1, design_complete: 2, generating: 3, completed: 4 }[this.taskStatus] || 0; },
+            currentStageName() { return { pending: '准备中...', uploading: '正在上传素材...', processing: '正在萃取灵感精华...', design_complete: '正在构思视觉语言...', generating: '正在绘制海报作品...', completed: '创作完成！', failed: '创作失败' }[this.taskStatus]; },
+            sortedPosters() { return [...this.generatedPosters].sort((a, b) => parseInt(a.number) - parseInt(b.number)); },
+            selectedPostersCount() { return this.posterOptions.filter(p => p.selected).length; },
+            estimatedCredits() { return this.selectedPostersCount * 4; }
+        },
+        watch: {
+            // 监听编辑模式切换，当切换到局部修改时初始化 Canvas
+            editType(newType) {
+                if (newType === 'partial') {
+                    this.$nextTick(() => {
+                        this.initCanvas();
+                    });
+                }
+            }
+        },
+        methods: {
+            log(m) { this.logs.push({ time: new Date().toTimeString().slice(0, 8), message: m }); },
+            async checkApi() { try { const r = await fetch(API + '/health'); this.isApiOnline = r.ok; this.apiStatus = r.ok ? '在线' : '离线'; } catch { this.isApiOnline = false; this.apiStatus = '离线'; } },
+            selectAllPosters() { this.posterOptions.forEach(p => p.selected = true); },
+            deselectAllPosters() { this.posterOptions.forEach(p => p.selected = false); },
+            togglePoster(poster) { poster.selected = !poster.selected; },
+            handleFileChange(e) {
+                Array.from(e.target.files).slice(0, 9 - this.uploadedImages.length).forEach(f => {
+                    const r = new FileReader(); r.onload = ev => this.uploadedImages.push({ id: Date.now() + Math.random(), file: f, preview: ev.target.result }); r.readAsDataURL(f);
+                }); e.target.value = '';
+            },
+            async startGeneration() {
+                if (!this.canSubmit) return;
+
+                // 检查是否已登录
+                if (!this.currentUser) {
+                    this.loginWarning = true;
+                    // 保存当前输入的数据到 localStorage
+                    this.saveDraftToStorage();
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 1500);
+                    return;
+                }
+
+                // 检查积分是否足够
+                if ((this.currentUser.credits || 0) < this.estimatedCredits) {
+                    this.creditsWarning = true;
+                    setTimeout(() => {
+                        this.creditsWarning = false;
+                    }, 3000);
+                    return;
+                }
+
+                this.step = 2; this.taskStatus = 'uploading'; this.taskProgress = 0; this.taskError = null; this.logs = []; this.log('开始');
+                try {
+                    const fd = new FormData(); fd.append('user_id', this.userId); fd.append('upload_id', this.uploadId);
+                    this.uploadedImages.forEach(i => fd.append('files', i.file));
+                    const up = await fetch(API + '/api/upload-images', { method: 'POST', body: fd });
+                    if (!up.ok) throw new Error('上传失败');
+                    this.log('上传完成'); this.taskProgress = 10; this.taskStatus = 'processing';
+                    // 获取选中的海报序号列表
+                    const selectedPosters = this.posterOptions.filter(p => p.selected).map(p => p.id);
+                    console.log('发送 selected_posters:', selectedPosters, '数量:', selectedPosters.length);
+                    this.log('选中海报: ' + selectedPosters.join(',') + ' (共' + selectedPosters.length + '张)');
+                    const gen = await fetch(API + '/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id: this.userId, upload_id: this.uploadId, product_description: this.productDesc, selected_posters: selectedPosters }) });
+                    if (!gen.ok) throw new Error((await gen.json()).detail || '任务失败');
+                    const d = await gen.json();
+                    this.taskId = d.task_id;
+                    this.sessionId = d.session_id;  // 获取后端生成的 session_id
+                    this.log('任务: ' + this.taskId + ' | 会话: ' + this.sessionId);
+                    this.poll = setInterval(() => this.checkTask(), 2000);
+                } catch (e) { this.log('错误: ' + e.message); this.taskError = e.message; this.taskStatus = 'failed'; }
+            },
+            async checkTask() {
+                if (!this.taskId) return;
+                try {
+                    const r = await fetch(API + '/api/task/' + this.taskId); if (!r.ok) return;
+                    const t = await r.json(); if (t.status !== this.taskStatus) this.log(t.message);
+                    this.taskStatus = t.status; this.taskProgress = t.progress; this.taskMessage = t.message;
+                    if (t.status === 'completed') { clearInterval(this.poll); this.loadPosters(); }
+                    if (t.status === 'failed') { clearInterval(this.poll); this.taskError = t.error; }
+                } catch {}
+            },
+            async loadPosters() {
+                const r = await fetch(API + '/api/posters/' + this.userId + '/' + this.sessionId);
+                const d = await r.json();
+                // 适配新的API响应格式
+                this.generatedPosters = (d.posters || []).map((p, i) => {
+                    const num = String(p.index).padStart(2, '0');
+                    return {
+                        id: i,
+                        number: num,
+                        title: `海报${num}`,
+                        mainTitle: `海报${num}`,
+                        subTitle: '主视觉',
+                        filename: p.filename,
+                        url: API + p.url,
+                        showDownloadToast: false
+                    };
+                });
+                this.projectName = d.product_name ? d.product_name + ' · 品牌视觉系列' : '品牌视觉系列 · ' + new Date().getFullYear();
+                this.step = 3;
+            },
+            async viewImage(p) {
+                // 重置编辑状态
+                this.editType = 'full';
+                this.editPrompt = '';
+                this.editReferenceImages = [];
+                this.canvasHistory = [];
+                this.canvasRedoStack = [];
+                this.isEditing = false;
+
+                // 恢复用户上次选择的版本索引，如果没有则默认0
+                const savedVersionIndex = p.lastVersionIndex || 0;
+
+                // 立即用当前点击的海报初始化版本列表，避免显示旧数据
+                this.posterVersions = [{
+                    version: 0,
+                    type: 'initial',
+                    thumbnail_url: p.url,
+                    full_url: p.url
+                }];
+                this.currentVersionIndex = 0;  // 先设为0，加载完版本后再恢复
+
+                // 打开灯箱
+                this.lightbox = { isOpen: true, currentImage: p };
+                document.body.style.overflow = 'hidden';
+
+                // 异步加载完整版本历史（如果有编辑过的版本会替换上面的初始数据）
+                await this.loadPosterVersions(p);
+
+                // 加载完版本后，恢复到用户上次选择的版本（确保索引不越界）
+                if (savedVersionIndex > 0 && savedVersionIndex < this.posterVersions.length) {
+                    this.currentVersionIndex = savedVersionIndex;
+                }
+            },
+            closeLightbox() {
+                // 关闭前，更新主页面海报图片为当前选中的版本，并记住版本索引
+                if (this.lightbox.currentImage && this.posterVersions.length > 0) {
+                    const currentVersion = this.posterVersions[this.currentVersionIndex];
+                    if (currentVersion) {
+                        // 找到对应的海报并更新其 URL 和记住的版本索引
+                        const poster = this.generatedPosters.find(p => p.number === this.lightbox.currentImage.number);
+                        if (poster) {
+                            poster.url = currentVersion.full_url;
+                            poster.lastVersionIndex = this.currentVersionIndex;  // 记住用户选择的版本
+                        }
+                    }
+                }
+
+                this.lightbox.isOpen = false;
+                document.body.style.overflow = '';
+                // 清理编辑轮询
+                if (this.editPoll) {
+                    clearInterval(this.editPoll);
+                    this.editPoll = null;
+                }
+            },
+            async downloadPoster(p) {
+                try {
+                    const r = await fetch(p.url); const b = await r.blob(); const a = document.createElement('a');
+                    a.href = URL.createObjectURL(b); a.download = p.filename || `poster_${p.number}.jpg`; a.click();
+                    p.showDownloadToast = true; setTimeout(() => p.showDownloadToast = false, 2000);
+                } catch { alert('下载失败'); }
+            },
+            async downloadAll() { for (const p of this.sortedPosters) { await this.downloadPoster(p); await new Promise(r => setTimeout(r, 300)); } },
+            confirmReset() {
+                this.showResetModal = false;
+                clearInterval(this.poll);
+                Object.assign(this.$data, {
+                    step: 1, productDesc: '', uploadedImages: [],
+                    taskId: null, taskStatus: 'pending', taskProgress: 0, taskMessage: '', taskError: null,
+                    logs: [], generatedPosters: [],
+                    showResetModal: false, lightbox: { isOpen: false, currentImage: null }
+                });
+                // userId 保持不变（登录用户的数据库 ID）
+                this.uploadId = 'upload_' + Date.now();
+                this.sessionId = null;
+            },
+            logout() {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('user');
+                this.currentUser = null;
+                this.userId = null;
+                this.showUserMenu = false;
+            },
+            // 保存草稿到 localStorage
+            saveDraftToStorage() {
+                const draft = {
+                    productDesc: this.productDesc,
+                    images: this.uploadedImages.map(img => ({
+                        id: img.id,
+                        preview: img.preview,
+                        name: img.file ? img.file.name : 'image.jpg',
+                        type: img.file ? img.file.type : 'image/jpeg'
+                    }))
+                };
+                localStorage.setItem('poster_draft', JSON.stringify(draft));
+            },
+            // 从 localStorage 恢复草稿
+            restoreDraftFromStorage() {
+                const draftStr = localStorage.getItem('poster_draft');
+                if (!draftStr) return;
+
+                try {
+                    const draft = JSON.parse(draftStr);
+                    // 恢复文本
+                    if (draft.productDesc) {
+                        this.productDesc = draft.productDesc;
+                    }
+                    // 恢复图片
+                    if (draft.images && draft.images.length > 0) {
+                        draft.images.forEach(img => {
+                            // 将 base64 转换回 File 对象
+                            const file = this.dataURLtoFile(img.preview, img.name, img.type);
+                            this.uploadedImages.push({
+                                id: img.id,
+                                file: file,
+                                preview: img.preview
+                            });
+                        });
+                    }
+                    // 恢复后清除草稿
+                    localStorage.removeItem('poster_draft');
+                } catch (e) {
+                    console.error('恢复草稿失败', e);
+                    localStorage.removeItem('poster_draft');
+                }
+            },
+            // base64 转 File 对象
+            dataURLtoFile(dataurl, filename, mimeType) {
+                const arr = dataurl.split(',');
+                const mime = mimeType || (arr[0].match(/:(.*?);/) ? arr[0].match(/:(.*?);/)[1] : 'image/jpeg');
+                const bstr = atob(arr[1]);
+                let n = bstr.length;
+                const u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new File([u8arr], filename, { type: mime });
+            },
+
+            // ========== 编辑功能方法 ==========
+
+            // 加载海报版本历史
+            async loadPosterVersions(poster) {
+                const posterId = poster.number;  // 使用海报序号作为 poster_id
+                try {
+                    const r = await fetch(`${API}/api/edit/versions/${this.userId}/${this.sessionId}/${posterId}`);
+                    if (r.ok) {
+                        const data = await r.json();
+                        if (data.versions && data.versions.length > 0) {
+                            this.posterVersions = data.versions;
+                        } else {
+                            // 没有版本历史，创建初始版本
+                            this.posterVersions = [{
+                                version: 0,
+                                type: 'initial',
+                                thumbnail_url: poster.url,
+                                full_url: poster.url
+                            }];
+                        }
+                    } else {
+                        // API 失败，使用当前图片作为初始版本
+                        this.posterVersions = [{
+                            version: 0,
+                            type: 'initial',
+                            thumbnail_url: poster.url,
+                            full_url: poster.url
+                        }];
+                    }
+                } catch (e) {
+                    console.error('加载版本历史失败', e);
+                    this.posterVersions = [{
+                        version: 0,
+                        type: 'initial',
+                        thumbnail_url: poster.url,
+                        full_url: poster.url
+                    }];
+                }
+            },
+
+            // 切换版本
+            switchVersion(index) {
+                this.currentVersionIndex = index;
+                this.clearCanvas();
+            },
+
+            // 下载当前版本
+            async downloadCurrentVersion() {
+                const version = this.posterVersions[this.currentVersionIndex];
+                if (!version) return;
+                try {
+                    const r = await fetch(version.full_url);
+                    const b = await r.blob();
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(b);
+                    a.download = `poster_v${version.version}.jpg`;
+                    a.click();
+                } catch { alert('下载失败'); }
+            },
+
+            // 图片加载完成后初始化 Canvas
+            onImageLoaded(e) {
+                this.$nextTick(() => {
+                    this.initCanvas();
+                });
+            },
+
+            // 初始化 Canvas
+            initCanvas() {
+                const canvas = this.$refs.editCanvas;
+                if (!canvas) return;
+
+                const img = document.getElementById('edit-image-' + this.currentVersionIndex);
+                if (!img) return;
+
+                // 设置 Canvas 的像素尺寸
+                canvas.width = img.clientWidth;
+                canvas.height = img.clientHeight;
+
+                // 设置 Canvas 的 CSS 尺寸，使其覆盖图片
+                canvas.style.width = img.clientWidth + 'px';
+                canvas.style.height = img.clientHeight + 'px';
+
+                const ctx = canvas.getContext('2d');
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            },
+
+            // 开始绘制
+            startDrawing(e) {
+                this.isDrawing = true;
+                const canvas = this.$refs.editCanvas;
+                const ctx = canvas.getContext('2d');
+
+                // 保存当前状态用于撤销
+                this.canvasHistory.push(canvas.toDataURL());
+                this.canvasRedoStack = [];  // 清空重做栈
+
+                const rect = canvas.getBoundingClientRect();
+                ctx.beginPath();
+                ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            },
+
+            // 绘制中
+            draw(e) {
+                if (!this.isDrawing) return;
+                const canvas = this.$refs.editCanvas;
+                const ctx = canvas.getContext('2d');
+                const rect = canvas.getBoundingClientRect();
+
+                ctx.lineWidth = this.brushSize;
+                ctx.strokeStyle = 'rgba(198, 142, 93, 0.5)';  // 半透明金色
+                ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            },
+
+            // 停止绘制
+            stopDrawing() {
+                this.isDrawing = false;
+            },
+
+            // 撤销
+            undoCanvas() {
+                if (this.canvasHistory.length === 0) return;
+                const canvas = this.$refs.editCanvas;
+                const ctx = canvas.getContext('2d');
+
+                // 保存当前状态到重做栈
+                this.canvasRedoStack.push(canvas.toDataURL());
+
+                // 恢复上一个状态
+                const prevState = this.canvasHistory.pop();
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = prevState;
+            },
+
+            // 重做
+            redoCanvas() {
+                if (this.canvasRedoStack.length === 0) return;
+                const canvas = this.$refs.editCanvas;
+                const ctx = canvas.getContext('2d');
+
+                // 保存当前状态到历史栈
+                this.canvasHistory.push(canvas.toDataURL());
+
+                // 恢复重做状态
+                const nextState = this.canvasRedoStack.pop();
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = nextState;
+            },
+
+            // 清空画布
+            clearCanvas() {
+                const canvas = this.$refs.editCanvas;
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.canvasHistory = [];
+                this.canvasRedoStack = [];
+            },
+
+            // 获取带涂抹标记的图片（合成原图 + Canvas）
+            getMarkedImage() {
+                const canvas = this.$refs.editCanvas;
+                const img = document.getElementById('edit-image-' + this.currentVersionIndex);
+                if (!canvas || !img) return null;
+
+                // 创建临时 canvas 合成图片
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = img.naturalWidth;
+                tempCanvas.height = img.naturalHeight;
+                const ctx = tempCanvas.getContext('2d');
+
+                // 绘制原图
+                ctx.drawImage(img, 0, 0);
+
+                // 缩放并绘制涂抹层
+                const scaleX = img.naturalWidth / canvas.width;
+                const scaleY = img.naturalHeight / canvas.height;
+                ctx.scale(scaleX, scaleY);
+                ctx.drawImage(canvas, 0, 0);
+
+                return tempCanvas.toDataURL('image/png');
+            },
+
+            // 处理参考图上传
+            handleEditFileChange(e) {
+                Array.from(e.target.files).slice(0, 9 - this.editReferenceImages.length).forEach(f => {
+                    const r = new FileReader();
+                    r.onload = ev => this.editReferenceImages.push({
+                        id: Date.now() + Math.random(),
+                        file: f,
+                        preview: ev.target.result
+                    });
+                    r.readAsDataURL(f);
+                });
+                e.target.value = '';
+            },
+
+            // 确认修改
+            async confirmEdit() {
+                if (!this.editPrompt || this.isEditing) return;
+
+                this.isEditing = true;
+                this.editTaskMessage = '准备中...';
+                this.editTaskProgress = 0;
+
+                try {
+                    // 获取源图片
+                    let sourceImage;
+                    let originalImage = null;
+
+                    if (this.editType === 'partial') {
+                        // 局部修改：发送带标记图 + 原图
+                        sourceImage = this.getMarkedImage();
+                        originalImage = this.posterVersions[this.currentVersionIndex]?.full_url;
+                    } else {
+                        // 全图修改：只发送原图
+                        sourceImage = this.posterVersions[this.currentVersionIndex]?.full_url;
+                    }
+
+                    // 获取参考图（使用第一张）
+                    const referenceImage = this.editReferenceImages.length > 0
+                        ? this.editReferenceImages[0].preview
+                        : null;
+
+                    const posterId = this.lightbox.currentImage?.number || '00';
+
+                    const response = await fetch(`${API}/api/edit/poster`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            user_id: this.userId,
+                            product_id: this.sessionId,
+                            poster_id: posterId,
+                            edit_type: this.editType,
+                            prompt: this.editPrompt,
+                            source_image: sourceImage,
+                            original_image: originalImage,
+                            reference_image: referenceImage,
+                            parent_version: this.posterVersions[this.currentVersionIndex]?.version
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.detail || '提交失败');
+                    }
+
+                    const data = await response.json();
+                    this.editTaskId = data.task_id;
+                    this.editTaskMessage = '正在生成...';
+
+                    // 开始轮询任务状态
+                    this.editPoll = setInterval(() => this.checkEditTask(), 2000);
+
+                } catch (e) {
+                    alert('编辑失败: ' + e.message);
+                    this.isEditing = false;
+                }
+            },
+
+            // 检查编辑任务状态
+            async checkEditTask() {
+                if (!this.editTaskId) return;
+
+                try {
+                    const r = await fetch(`${API}/api/edit/task/${this.editTaskId}`);
+                    if (!r.ok) return;
+
+                    const task = await r.json();
+                    this.editTaskProgress = task.progress;
+                    this.editTaskMessage = task.message;
+
+                    if (task.status === 'completed') {
+                        clearInterval(this.editPoll);
+                        this.editPoll = null;
+                        this.isEditing = false;
+
+                        // 刷新版本列表
+                        await this.loadPosterVersions(this.lightbox.currentImage);
+                        // 切换到最新版本
+                        this.currentVersionIndex = this.posterVersions.length - 1;
+
+                        // 清空编辑状态
+                        this.editPrompt = '';
+                        this.editReferenceImages = [];
+                        this.clearCanvas();
+                    }
+
+                    if (task.status === 'failed') {
+                        clearInterval(this.editPoll);
+                        this.editPoll = null;
+                        this.isEditing = false;
+                        alert('编辑失败: ' + (task.error || '未知错误'));
+                    }
+                } catch (e) {
+                    console.error('检查任务状态失败', e);
+                }
+            },
+
+            closeUserMenu(e) {
+                // 点击外部关闭菜单
+                if (!e.target.closest('.user-menu-container')) {
+                    this.showUserMenu = false;
+                }
+            },
+            // 获取用户最新积分
+            async fetchUserCredits() {
+                const token = localStorage.getItem('access_token');
+                if (!token) return;
+                try {
+                    const r = await fetch('/api/auth/me', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (r.ok) {
+                        const user = await r.json();
+                        this.currentUser = user;
+                        this.userId = String(user.id);
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                } catch (e) {
+                    console.error('获取用户积分失败', e);
+                }
+            }
+        },
+        mounted() {
+            // 检查登录状态
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    this.currentUser = JSON.parse(userStr);
+                    // 使用登录用户的数据库 ID 作为 userId，确保同一用户的数据存储在同一目录
+                    if (this.currentUser && this.currentUser.id) {
+                        this.userId = String(this.currentUser.id);
+                    }
+                    // 异步获取最新积分
+                    this.fetchUserCredits();
+                } catch (e) {
+                    console.error('解析用户信息失败', e);
+                }
+            }
+
+            // 恢复草稿数据（如果有）
+            this.restoreDraftFromStorage();
+
+            this.checkApi();
+            setInterval(() => this.checkApi(), 30000);
+            window.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    if (this.lightbox.isOpen) this.closeLightbox();
+                    else if (this.showResetModal) this.showResetModal = false;
+                    else if (this.showUserMenu) this.showUserMenu = false;
+                }
+            });
+            // 点击外部关闭用户菜单
+            document.addEventListener('click', this.closeUserMenu);
+        }
+    }).mount('#app');
+    </script>
+</body>
+</html>

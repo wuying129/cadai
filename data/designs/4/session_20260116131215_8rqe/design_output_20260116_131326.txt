@@ -1,0 +1,235 @@
+根据您上传的图片（一个呈现流体渐变、带有波纹纹理的3D抽象形态），这看起来像是一个概念性的**智能科技产品**（如智能音箱、情绪感知仪）或**高端美妆/香氛包装**。
+
+由于图片中没有文字信息，为了生成可用的电商视觉系统，我将基于其视觉特征，设定其为一个**“智能情绪感知音响 (Smart Sensory Speaker)”**，品牌命名为**“AURA (奥拉)”**。
+
+以下是完整的分析与提示词系统生成：
+
+---
+
+### 第一步：产品信息智能提取
+
+**【识别报告】**
+*   **品牌名称**：AURA / 奥拉（基于视觉风格的虚拟命名）
+*   **产品类型**：[数码家电] - [智能氛围音响/助眠仪]
+*   **产品规格**：约 15cm x 15cm，不规则流体形态
+*   **核心卖点**：
+    1.  流体声波设计 / Fluid Sound Wave Design
+    2.  情绪感知光效 / Mood-Sensing Lighting
+    3.  360°沉浸声场 / 360° Immersive Sound
+    4.  亲肤磨砂触感 / Skin-Friendly Matte Texture
+    5.  自然白噪音 / Natural White Noise
+*   **主色调**：薄荷绿 (#8EE3C8) + 珊瑚粉 (#FFB7A5) + 薰衣草紫 (#C6B6E7)（渐变融合）
+*   **辅助色**：高级灰 (#F0F0F0)
+*   **设计风格**：有机未来主义、3D流体艺术、极简科技
+*   **目标受众**：追求生活品质的Z世代、科技艺术爱好者、高压白领
+*   **品牌调性**：治愈、梦幻、先锋、艺术感
+*   **包装亮点**：打破传统几何形状，采用生物形态（Biomorphic）设计，表面带有声波纹理细节。
+
+---
+
+### 第二步：视觉风格选择
+**√ 杂志编辑风格（高级、专业、大片感、粗衬线标题、极简留白）**
+*   **AI推荐依据**：产品的形态极具艺术感，类似《Kinfolk》或科技杂志中的概念产品，适合用干净的背景和大面积留白来突显产品的色彩和形态美感。
+
+### 第三步：文字排版效果选择
+**√ 极细线条字 + 大量留白 + 精确对齐（极简风）**
+*   **选择理由**：为了不抢夺产品本身复杂的渐变色和光影效果，文字需要极其克制、纤细，体现高端科技产品的冷峻与优雅。
+
+---
+
+### 第四步：生成完整提示词系统
+
+**特殊需求设定**：
+*   **是否需要模特**：否（以静物展示为主，强调产品本身的艺术性）
+*   **是否需要场景**：是（极简的家居一角或纯色摄影棚背景）
+
+---
+
+#### 0. LOGO生成提示词
+**中文提示词：**
+极简主义LOGO设计，品牌名称"AURA"，无衬线字体，纤细线条，极具现代感。字体颜色为深灰色。图形部分为一个抽象的渐变色圆点，配色采用薄荷绿到珊瑚粉的渐变。矢量图，白色背景，专业设计，高清晰度。
+**英文 Prompt:**
+Minimalist logo design, brand name "AURA", sans-serif font, ultra-thin lines, modern aesthetic. Font color is dark grey. The graphic icon is an abstract gradient dot, color palette fading from mint green to coral pink. Vector graphics, white background, professional design, high definition.
+
+---
+
+#### 海报 01 - 主KV视觉 (Hero Shot)
+**核心目标**：完美展示产品全貌，强调色彩与形态。
+
+**中文提示词：**
+电商海报主视觉，9:16竖版。画面中心展示【AURA智能音响】，**必须严格还原上传的产品图**：一个不规则的球体，表面呈现薄荷绿、粉色和紫色的梦幻渐变，左侧带有明显的声波状纹理起伏，材质为高级哑光磨砂质感。背景为纯净的浅灰白渐变，营造高端杂志大片感。光线柔和漫射，体现产品的体积感。构图居中，大量留白。
+**英文 Prompt:**
+E-commerce poster Key Visual, 9:16 vertical. Center shot of the [AURA Smart Speaker], **strictly restoring the uploaded product image**: an irregular spherical shape featuring a dreamy gradient of mint green, pink, and purple. The left side has distinct sound-wave ripple textures. Material is premium matte frosted texture. Background is a clean light grey-white gradient, creating a high-end magazine editorial look. Soft diffused lighting highlights the volume. Central composition, generous negative space.
+**Negative Prompts:**
+Glossy, plastic looking, dark background, complex background, wrong colors, sharp edges, distorted shape, text overlay, watermark.
+**排版布局说明：**
+*   **标题**：顶部居中。格式A（堆叠）。
+    *   中文：看见声音的颜色 (大号，极细黑体)
+    *   英文：SEE THE COLOR OF SOUND (中号，无衬线细体)
+*   **产品图**：画面正中央，占据视觉重心。
+*   **LOGO**：左上角，极小尺寸，深灰色。
+*   **按钮**：底部居中。文字 "探索更多 / EXPLORE MORE →"，极简线框样式。
+
+---
+
+#### 海报 02 - 生活场景 (Lifestyle)
+**核心目标**：展示产品融入家居环境的氛围。
+
+**中文提示词：**
+电商场景海报，9:16竖版。极简北欧风家居一角。阳光透过百叶窗洒在白色的边几上，形成几何光影。**严格还原的AURA流体渐变音响**放置在桌面上，作为艺术摆件。周围没有杂物，只有一杯清水。氛围宁静、治愈、高级。景深微虚化背景。
+**英文 Prompt:**
+E-commerce lifestyle poster, 9:16 vertical. A corner of a minimalist Nordic home. Sunlight filters through blinds onto a white side table, creating geometric shadows. The **strictly restored AURA fluid gradient speaker** sits on the table as an art piece. No clutter, just a glass of water nearby. Atmosphere is serene, healing, and premium. Shallow depth of field blurs the background.
+**Negative Prompts:**
+Cluttered, dark room, messy, human hands, messy cables, bright harsh sunlight, cartoonish.
+**排版布局说明：**
+*   **文案**：位于画面上方空白处，左对齐。格式A。
+    *   中文：治愈你的每一刻 (中号，细体)
+    *   英文：HEAL YOUR EVERY MOMENT (小号)
+*   **段落**：文案下方。
+    *   中文：在慵懒的午后，让光与声重塑空间。
+    *   英文：Reshape space with light and sound on a lazy afternoon.
+*   **LOGO**：左上角。
+
+---
+
+#### 海报 03 - 概念可视化 (Concept)
+**核心目标**：可视化“声波”与“流体”的设计概念。
+
+**中文提示词：**
+电商概念海报，9:16竖版。超现实主义3D渲染。**严格还原AURA音响**悬浮在空中，产品周围环绕着半透明的、液态的声波涟漪，颜色与产品渐变色（绿/粉/紫）呼应。表现“声音流动”的概念。背景深邃但干净，突出产品的发光感。
+**英文 Prompt:**
+E-commerce concept poster, 9:16 vertical. Surreal 3D rendering. The **strictly restored AURA speaker** floating in mid-air, surrounded by translucent, liquid sound wave ripples matching the product's gradient colors (green/pink/purple). Visualizing the concept of "flowing sound". Background is deep but clean, highlighting the product's luminosity.
+**Negative Prompts:**
+Water splash, messy liquid, chaotic, distorted product, low resolution, fire, smoke.
+**排版布局说明：**
+*   **标题**：底部左侧。格式C（分离）。
+    *   左侧：流体声学
+    *   右侧：FLUID ACOUSTICS
+*   **卖点**：画面右侧中部，竖向排列。格式A。
+    *   360°环绕 / 360° Surround
+    *   沉浸声场 / Immersive Field
+
+---
+
+#### 海报 04 - 细节特写01 (Texture)
+**核心目标**：展示表面的波纹纹理和磨砂质感。
+
+**中文提示词：**
+电商细节海报，9:16竖版。微距特写镜头。聚焦于**AURA音响**表面的波纹纹理部分。清晰展示细腻的磨砂材质颗粒感，以及薄荷绿到粉色的柔和过渡。光影侧打，增强纹理的立体感。极简构图，充满艺术张力。
+**英文 Prompt:**
+E-commerce detail poster, 9:16 vertical. Macro close-up shot. Focusing on the ripple texture section of the **AURA speaker** surface. Clearly displaying the fine matte grainy texture and the soft transition from mint green to pink. Side lighting enhances the three-dimensionality of the texture. Minimalist composition, full of artistic tension.
+**Negative Prompts:**
+Blurry, pixelated, smooth plastic, reflection, scratches, dust.
+**排版布局说明：**
+*   **标题**：画面中心（压在图片模糊处）。格式B（并列）。
+    *   亲肤触感 | SKIN-FRIENDLY TOUCH
+*   **说明文字**：底部居中。
+    *   中文：纳米级磨砂涂层，如肌肤般细腻。
+    *   英文：Nano-grade matte coating, as delicate as skin.
+
+---
+
+#### 海报 05 - 细节特写02 (Color)
+**核心目标**：展示梦幻的渐变配色工艺。
+
+**中文提示词：**
+电商细节海报，9:16竖版。局部特写。展示**AURA音响**色彩融合最丰富的部分（粉色与紫色的交界）。画面色彩饱和度适中，呈现高级的莫兰迪色系质感。光线柔和，无高光点，强调色彩的晕染效果，像一幅水彩画。
+**英文 Prompt:**
+E-commerce detail poster, 9:16 vertical. Partial close-up. Displaying the richest color fusion part of the **AURA speaker** (interface of pink and purple). Moderate color saturation, presenting a premium Morandi color texture. Soft lighting, no specular highlights, emphasizing the color blending effect, like a watercolor painting.
+**Negative Prompts:**
+Neon colors, oversaturated, harsh contrast, black spots, color banding.
+**排版布局说明：**
+*   **标题**：右上角。格式A。
+    *   梦幻渐变 (中号)
+    *   DREAMY GRADIENT (小号)
+*   **色卡示意**：画面右下角放置三个圆形色块（薄荷绿、粉、紫），下方标注Hex色值。
+
+---
+
+#### 海报 06 - 卖点展示 (Tech)
+**核心目标**：展示情绪感知功能（光效）。
+
+**中文提示词：**
+电商功能海报，9:16竖版。暗调环境。**严格还原AURA音响**置于黑色玻璃面上，产品内部散发出柔和的呼吸灯光（暖橙色），象征“温暖模式”。倒影清晰。光线照亮了产品的轮廓。营造科技与温暖并存的感觉。
+**英文 Prompt:**
+E-commerce feature poster, 9:16 vertical. Dark environment. The **strictly restored AURA speaker** placed on a black glass surface, emitting a soft breathing light (warm orange) from within, symbolizing "Warm Mode". Clear reflection. Light illuminates the product outline. Creating a feeling of technology meeting warmth.
+**Negative Prompts:**
+Bright room, white background, dazzling light, laser beam, sci-fi cyberpunk.
+**排版布局说明：**
+*   **标题**：顶部居中，白色文字。格式A。
+    *   情绪感知光效 (大号)
+    *   MOOD SENSING LIGHT (中号)
+*   **功能点**：围绕产品分布。格式A。
+    *   呼吸模式 / Breathing Mode
+    *   音乐律动 / Music Rhythm
+    *   助眠夜灯 / Sleep Light
+
+---
+
+#### 海报 07 - 用户评价 (Review)
+**核心目标**：借用户之口建立信任感，配合极简风格。
+
+**中文提示词：**
+电商评价海报，9:16竖版。背景为非常浅的米灰色。左侧展示**AURA音响**的侧面剪影（保持配色）。右侧大面积留白用于文字排版。风格干净、素雅。
+**英文 Prompt:**
+E-commerce review poster, 9:16 vertical. Background is a very pale beige-grey. Left side shows the side silhouette of the **AURA speaker** (keeping color scheme). Right side has large negative space for typography. Style is clean and elegant.
+**排版布局说明：**
+*   **引用符号**：巨大的灰色双引号“ ”作为装饰背景。
+*   **评价内容**：居中排版。格式A。
+    *   中文：“它不仅仅是音响，更是家里的艺术品。音质与光效完美融合。”
+    *   英文："It's not just a speaker, it's an artwork. Perfect fusion of sound and light."
+*   **用户署名**：底部。
+    *   Design Weekly Editor | 2024
+
+---
+
+#### 海报 08 - 品牌故事/灵感 (Moodboard)
+**核心目标**：传达“自然、流体”的设计灵感来源。
+
+**中文提示词：**
+电商情绪板海报，9:16竖版。拼贴风格。主图为**AURA音响**。背景由几张意向图淡化处理组成：海浪的波纹、晨曦的天空渐变、鹅卵石的曲线。整体色调统一在粉绿紫的柔和氛围中。传递“源于自然”的设计理念。
+**英文 Prompt:**
+E-commerce moodboard poster, 9:16 vertical. Collage style. Main image is the **AURA speaker**. Background consists of faded inspirational images: ocean wave ripples, dawn sky gradients, pebble curves. Overall tone unified in a soft pink-green-purple atmosphere. Conveying the "Inspired by Nature" design philosophy.
+**Negative Prompts:**
+Messy collage, sharp borders, conflicting colors, text clutter.
+**排版布局说明：**
+*   **标题**：中心位置，与图片叠压。格式A。
+    *   自然灵感 (特大号，细线条)
+    *   INSPIRED BY NATURE (大号)
+*   **装饰文字**：四周分布细小的说明文字。
+
+---
+
+#### 海报 09 - 产品参数 (Specifications)
+**核心目标**：清晰列出技术规格，保持美感。
+
+**中文提示词：**
+电商参数海报，9:16竖版。纯白色背景。**AURA音响**的俯视图（正圆略带波纹）放置在画面顶部三分之一处，投影柔和。下方为极简设计的参数表格，使用细灰线分割。
+**英文 Prompt:**
+E-commerce specs poster, 9:16 vertical. Pure white background. Top-down view of the **AURA speaker** (circle with slight ripples) placed in the top third, soft shadow. Below is a minimalist parameter table, divided by thin grey lines.
+**排版布局说明：**
+*   **标题**：产品图下方。格式A。
+    *   产品参数 / SPECIFICATIONS
+*   **表格内容**（中英双语）：
+    *   尺寸 / Size : 150 x 150 x 140 mm
+    *   材质 / Material : 亲肤树脂 / Skin-friendly Resin
+    *   续航 / Battery : 12小时 / 12 Hours
+    *   连接 / Connect : Bluetooth 5.3
+    *   输入 / Input : Type-C
+
+---
+
+#### 海报 10 - 包装清单/CTA (Package & CTA)
+**核心目标**：展示包装内容，引导购买。
+
+**中文提示词：**
+电商包装海报，9:16竖版。极简摄影。展示极简设计的白色方形包装盒（上有烫银LOGO），盖子打开，**AURA音响**放置在旁边。配件（数据线、说明书）整齐排列。光线明亮均匀。
+**英文 Prompt:**
+E-commerce packaging poster, 9:16 vertical. Minimalist photography. Displaying a minimalist white square packaging box (with silver hot-stamped LOGO), lid open, **AURA speaker** placed beside it. Accessories (cable, manual) arranged neatly. Bright and even lighting.
+**排版布局说明：**
+*   **标题**：顶部。格式A。
+    *   即刻开启感官之旅
+    *   START YOUR SENSORY JOURNEY
+*   **清单文字**：对应物品下方标注小字。
+*   **CTA按钮**：画面最底部，醒目黑色色块，白色文字。
+    *   立即购买 SHOP NOW →

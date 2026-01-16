@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>积分管理 - 品牌视觉工坊</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Noto+Serif+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#F9F7F2', 'paper-light': '#FFFEFA', 'ink': '#2C2420', 'ink-light': '#585350',
+                        'gold': '#C68E5D', 'gold-dim': '#AB7F55', 'sage': '#8DA399', 'stone': '#E5E0D8',
+                    },
+                    fontFamily: { serif: ['"Noto Serif SC"', '"Playfair Display"', 'serif'], sans: ['"Lato"', 'sans-serif'], },
+                    boxShadow: { 'layer': '0 10px 30px -10px rgba(44, 36, 32, 0.08)', 'float': '0 20px 40px -10px rgba(44, 36, 32, 0.15)', 'glow': '0 0 20px rgba(198, 142, 93, 0.3)', },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Lato', sans-serif; background-color: #F9F7F2; color: #2C2420; overflow-x: hidden; }
+        .bg-noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .blob-bg { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.4; animation: blob 10s infinite; }
+        @keyframes blob { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-50px) scale(1.1); } 66% { transform: translate(-20px,20px) scale(0.9); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.8s ease-out forwards; }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; } .fade-enter-from, .fade-leave-to { opacity: 0; }
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="bg-noise"></div>
+    <div class="blob-bg w-96 h-96 bg-gold/20 -top-[10%] -left-[10%]"></div>
+    <div class="blob-bg w-80 h-80 bg-stone/50 bottom-[10%] -right-[5%]"></div>
+
+    <div id="app" v-cloak class="relative z-10 min-h-screen flex flex-col">
+        <!-- Header - 与主页一致 -->
+        <header class="sticky top-0 z-50 backdrop-blur-md bg-paper/80 border-b border-stone/50">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                <div class="w-24">
+                    <a href="/" class="group flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-ink-light hover:text-gold transition-colors">
+                        <span class="w-8 h-[1px] bg-ink-light group-hover:bg-gold transition-colors"></span>返回
+                    </a>
+                </div>
+                <h1 class="font-serif text-2xl text-ink font-bold italic">Atelier<span class="text-gold">.</span>AI</h1>
+                <div class="flex items-center gap-4">
+                    <!-- API状态 -->
+                    <div :class="isApiOnline ? 'bg-green-500' : 'bg-red-500'" class="w-2 h-2 rounded-full animate-pulse" :title="apiStatus"></div>
+                    <!-- 我的作品按钮 -->
+                    <a v-if="currentUser" href="/history" class="px-4 py-2 bg-stone/30 hover:bg-stone/50 text-ink rounded-lg shadow-sm hover:shadow transition-all text-xs font-bold tracking-widest uppercase flex items-center gap-2">
+                        <i class="fas fa-folder-open text-[10px]"></i>
+                        我的作品
+                    </a>
+                    <!-- 用户状态 -->
+                    <div v-if="currentUser" class="relative user-menu-container">
+                        <div @click.stop="showUserMenu = !showUserMenu" class="w-8 h-8 rounded-full bg-gold text-white flex items-center justify-center font-bold text-sm uppercase cursor-pointer hover:ring-2 hover:ring-gold/50 transition-all">{{ currentUser.email.charAt(0) }}</div>
+                        <!-- 下拉菜单 -->
+                        <div v-if="showUserMenu" class="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-float border border-stone/30 py-1 z-50">
+                            <a href="/credits" class="block px-4 py-2 text-sm text-gold font-bold hover:bg-stone/20 transition-colors">积分管理</a>
+                            <div class="border-t border-stone/30 my-1"></div>
+                            <button @click="logout" class="w-full text-left px-4 py-2 text-sm text-ink hover:bg-stone/20 transition-colors">退出登录</button>
+                        </div>
+                    </div>
+                    <a v-else href="/login" class="text-xs text-ink-light hover:text-gold transition-colors">未登录</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex items-center justify-center p-6">
+            <div class="w-full max-w-2xl animate-fade-up">
+                <!-- Title -->
+                <div class="text-center mb-12">
+                    <span class="text-gold text-xs font-bold tracking-[0.2em] uppercase mb-2 block">创作能量</span>
+                    <h2 class="font-serif text-4xl text-ink leading-tight mb-3">我的积分</h2>
+                    <p class="text-ink-light font-light text-sm">1元 = 10积分，生成或编辑海报消耗4积分/张</p>
+                </div>
+
+                <!-- 积分展示卡片 -->
+                <div class="relative group mb-10">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-gold/30 via-gold-dim/20 to-gold/30 rounded-2xl opacity-50 blur group-hover:opacity-75 transition duration-500"></div>
+                    <div v-if="user" class="relative bg-gradient-to-br from-ink via-ink-light to-ink rounded-2xl p-10 text-white shadow-float overflow-hidden">
+                        <!-- 装饰元素 -->
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-gold/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                        <div class="absolute bottom-0 left-0 w-24 h-24 bg-gold/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+
+                        <div class="relative z-10">
+                            <div class="flex items-baseline justify-center gap-3 mb-6">
+                                <span class="font-serif text-7xl font-bold text-gold">{{ user.credits }}</span>
+                                <span class="text-xl text-white/60 tracking-widest uppercase">积分</span>
+                            </div>
+                            <div v-if="user.frozen > 0" class="text-center text-sm text-white/50 flex items-center justify-center gap-2">
+                                <i class="fas fa-lock text-xs"></i>
+                                冻结中: {{ user.frozen }} 积分
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="relative bg-stone/30 rounded-2xl p-10 text-center">
+                        <p class="text-ink-light">加载中...</p>
+                    </div>
+                </div>
+
+                <!-- 兑换码输入 -->
+                <div class="relative group mb-8">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-stone to-white rounded-xl opacity-50 blur group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative bg-paper-light border border-stone rounded-xl p-8 shadow-layer">
+                        <h3 class="text-xs font-bold tracking-[0.2em] uppercase text-gold mb-6 text-center">兑换积分</h3>
+                        <div class="max-w-md mx-auto">
+                            <div class="flex gap-3">
+                                <input
+                                    v-model="redeemCode"
+                                    type="text"
+                                    @keyup.enter="redeemCredits"
+                                    class="flex-1 px-4 py-3 bg-paper border border-stone rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all text-center tracking-widest uppercase"
+                                    placeholder="请输入兑换码"
+                                    maxlength="16"
+                                    :disabled="redeeming"
+                                >
+                                <button
+                                    @click="redeemCredits"
+                                    :disabled="!redeemCode || redeeming"
+                                    class="px-6 py-3 bg-gold hover:bg-gold-dim text-white rounded-lg font-bold tracking-widest uppercase text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                >
+                                    <i v-if="redeeming" class="fas fa-spinner fa-spin"></i>
+                                    <span>{{ redeeming ? '兑换中' : '兑换' }}</span>
+                                </button>
+                            </div>
+                            <p v-if="redeemMessage" :class="redeemSuccess ? 'text-green-600' : 'text-red-500'" class="text-sm text-center mt-3">
+                                {{ redeemMessage }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 充值说明 -->
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-stone to-white rounded-xl opacity-30 blur transition duration-500"></div>
+                    <div class="relative bg-paper-light/50 border border-stone/50 rounded-xl p-6">
+                        <h3 class="text-xs font-bold tracking-[0.2em] uppercase text-gold mb-4">充值说明</h3>
+                        <div class="space-y-3 text-sm text-ink-light font-light">
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center">
+                                    <i class="fas fa-coins text-gold text-xs"></i>
+                                </div>
+                                <span>1元 = 10积分</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center">
+                                    <i class="fas fa-wand-magic-sparkles text-gold text-xs"></i>
+                                </div>
+                                <span>生成海报：4积分/张</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center">
+                                    <i class="fas fa-pen-to-square text-gold text-xs"></i>
+                                </div>
+                                <span>编辑海报：4积分/张</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ========== 演示模式自动登录 ==========
+        (function() {
+            const DEMO_USER = {
+                id: 4,
+                email: "zhanbingqiang@gpulink.cc",
+                credits: 10000,
+                frozen: 0
+            };
+            const DEMO_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ6aGFuYmluZ3FpYW5nQGdwdWxpbmsuY2MiLCJleHAiOjE3NjkxNDM0MzZ9.7WRbUkjNvKVZzA_9q5hGWeI06OphFB34sMwGFOO_-bw";
+
+            if (!localStorage.getItem('access_token')) {
+                localStorage.setItem('access_token', DEMO_TOKEN);
+                localStorage.setItem('user', JSON.stringify(DEMO_USER));
+            }
+        })();
+        // ========== 演示模式自动登录结束 ==========
+
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    user: null,
+                    currentUser: null,
+                    showUserMenu: false,
+                    isApiOnline: false,
+                    apiStatus: '检查中',
+                    loading: true,
+                    // 兑换相关
+                    redeemCode: '',
+                    redeeming: false,
+                    redeemMessage: '',
+                    redeemSuccess: false
+                };
+            },
+            async mounted() {
+                // 检查登录状态
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    try {
+                        this.currentUser = JSON.parse(userStr);
+                    } catch (e) {
+                        console.error('解析用户信息失败', e);
+                    }
+                }
+
+                await this.loadUserInfo();
+                this.checkApi();
+                setInterval(() => this.checkApi(), 30000);
+
+                // ESC 关闭菜单
+                window.addEventListener('keydown', e => {
+                    if (e.key === 'Escape' && this.showUserMenu) {
+                        this.showUserMenu = false;
+                    }
+                });
+
+                // 点击外部关闭菜单
+                document.addEventListener('click', this.closeUserMenu);
+            },
+            methods: {
+                async checkApi() {
+                    try {
+                        const r = await fetch('/health');
+                        this.isApiOnline = r.ok;
+                        this.apiStatus = r.ok ? '在线' : '离线';
+                    } catch {
+                        this.isApiOnline = false;
+                        this.apiStatus = '离线';
+                    }
+                },
+                async loadUserInfo() {
+                    const token = localStorage.getItem('access_token');
+                    if (!token) {
+                        window.location.href = '/login';
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/api/auth/me', {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+
+                        if (response.status === 401) {
+                            localStorage.removeItem('access_token');
+                            localStorage.removeItem('user');
+                            window.location.href = '/login';
+                            return;
+                        }
+
+                        if (response.ok) {
+                            this.user = await response.json();
+                            this.currentUser = this.user;
+                            // 更新 localStorage 中的用户信息
+                            localStorage.setItem('user', JSON.stringify(this.user));
+                        }
+                    } catch (error) {
+                        console.error('加载用户信息失败', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                logout() {
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('user');
+                    this.currentUser = null;
+                    this.showUserMenu = false;
+                    window.location.href = '/login';
+                },
+                closeUserMenu(e) {
+                    if (!e.target.closest('.user-menu-container')) {
+                        this.showUserMenu = false;
+                    }
+                },
+                async redeemCredits() {
+                    if (!this.redeemCode || this.redeeming) return;
+
+                    this.redeeming = true;
+                    this.redeemMessage = '';
+                    this.redeemSuccess = false;
+
+                    const token = localStorage.getItem('access_token');
+                    if (!token) {
+                        this.redeemMessage = '请先登录';
+                        this.redeeming = false;
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/api/credits/redeem', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ code: this.redeemCode })
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok && data.success) {
+                            this.redeemSuccess = true;
+                            this.redeemMessage = data.message;
+                            this.redeemCode = '';
+                            // 刷新用户积分
+                            await this.loadUserInfo();
+                        } else {
+                            this.redeemSuccess = false;
+                            this.redeemMessage = data.detail || data.message || '兑换失败';
+                        }
+                    } catch (error) {
+                        console.error('兑换失败', error);
+                        this.redeemMessage = '兑换失败，请重试';
+                        this.redeemSuccess = false;
+                    } finally {
+                        this.redeeming = false;
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

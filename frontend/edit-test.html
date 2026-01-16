@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片编辑测试 - 品牌视觉工坊</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Noto+Serif+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#F9F7F2', 'paper-light': '#FFFEFA', 'ink': '#2C2420', 'ink-light': '#585350',
+                        'gold': '#C68E5D', 'gold-dim': '#AB7F55', 'sage': '#8DA399', 'stone': '#E5E0D8',
+                    },
+                    fontFamily: { serif: ['"Noto Serif SC"', '"Playfair Display"', 'serif'], sans: ['"Lato"', 'sans-serif'], },
+                    boxShadow: { 'layer': '0 10px 30px -10px rgba(44, 36, 32, 0.08)', 'float': '0 20px 40px -10px rgba(44, 36, 32, 0.15)', 'glow': '0 0 20px rgba(198, 142, 93, 0.3)', },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Lato', sans-serif; background-color: #2C2420; color: #F9F7F2; }
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body class="antialiased min-h-screen">
+    <div id="app" v-cloak class="min-h-screen flex">
+        <!-- 左侧：版本历史 -->
+        <div class="w-28 bg-ink/30 backdrop-blur border-r border-white/10 overflow-y-auto">
+            <div class="p-4">
+                <div class="text-xs text-white/50 uppercase tracking-widest mb-4">版本历史</div>
+                <div class="space-y-3">
+                    <div
+                        v-for="(version, index) in posterVersions"
+                        :key="version.version"
+                        @click="switchVersion(index)"
+                        :class="currentVersionIndex === index ? 'ring-2 ring-gold' : 'opacity-60 hover:opacity-100'"
+                        class="relative cursor-pointer transition-all group"
+                    >
+                        <div class="aspect-[3/4] bg-white/5 rounded overflow-hidden">
+                            <img :src="version.thumbnail_url || version.full_url" class="w-full h-full object-cover">
+                        </div>
+                        <div class="mt-1 text-center text-xs text-white font-bold">V{{ version.version }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间：图片预览/编辑区 -->
+        <div class="flex-1 flex items-center justify-center p-6 relative bg-ink/50">
+            <!-- 未加载图片时的提示 -->
+            <div v-if="!testImage && posterVersions.length === 0" class="text-center">
+                <div class="w-32 h-32 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
+                    <i class="fas fa-image text-4xl text-white/20"></i>
+                </div>
+                <p class="text-white/50 mb-6">请先上传测试图片</p>
+                <button
+                    @click="$refs.testImageInput.click()"
+                    class="px-6 py-3 bg-gold text-white rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-gold-dim transition-all"
+                >
+                    <i class="fas fa-upload mr-2"></i>上传图片
+                </button>
+                <input
+                    type="file"
+                    ref="testImageInput"
+                    @change="handleTestImageUpload"
+                    accept="image/*"
+                    class="hidden"
+                >
+            </div>
+
+            <!-- 图片预览 -->
+            <div v-else class="relative max-w-full max-h-full">
+                <img
+                    ref="editImage"
+                    :src="currentImageUrl"
+                    class="max-w-full max-h-[calc(100vh-4rem)] object-contain"
+                    @load="onImageLoaded"
+                >
+                <!-- Canvas 涂抹层（仅局部修改时显示） -->
+                <canvas
+                    v-if="editType === 'partial'"
+                    ref="editCanvas"
+                    @mousedown="startDrawing"
+                    @mousemove="draw"
+                    @mouseup="stopDrawing"
+                    @mouseleave="stopDrawing"
+                    class="absolute top-0 left-0 cursor-crosshair"
+                    style="touch-action: none;"
+                ></canvas>
+            </div>
+
+            <!-- 画笔工具栏（局部修改时显示） -->
+            <transition name="fade">
+                <div v-if="editType === 'partial' && (testImage || posterVersions.length > 0)" class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur rounded-lg shadow-float px-4 py-3 flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-paint-brush text-gold"></i>
+                        <span class="text-xs text-ink-light">画笔:</span>
+                        <input
+                            type="range"
+                            v-model="brushSize"
+                            min="10"
+                            max="100"
+                            class="w-24"
+                        >
+                        <span class="text-xs text-ink w-8">{{ brushSize }}</span>
+                    </div>
+                    <div class="h-6 w-px bg-stone"></div>
+                    <button @click="undoCanvas" :disabled="canvasHistory.length === 0" class="p-2 hover:bg-stone/20 rounded transition-colors disabled:opacity-30">
+                        <i class="fas fa-undo text-ink"></i>
+                    </button>
+                    <button @click="redoCanvas" :disabled="canvasRedoStack.length === 0" class="p-2 hover:bg-stone/20 rounded transition-colors disabled:opacity-30">
+                        <i class="fas fa-redo text-ink"></i>
+                    </button>
+                    <button @click="clearCanvas" class="p-2 hover:bg-stone/20 rounded transition-colors">
+                        <i class="fas fa-eraser text-ink"></i>
+                    </button>
+                </div>
+            </transition>
+        </div>
+
+        <!-- 右侧：操作面板 -->
+        <div class="w-96 bg-paper border-l border-stone/30 overflow-y-auto">
+            <div class="p-6 space-y-6">
+                <!-- 标题 -->
+                <div class="border-b border-stone/50 pb-4">
+                    <h1 class="font-serif text-2xl text-ink">图片编辑测试</h1>
+                    <p class="text-xs text-ink-light mt-1">测试全图修改和局部修改功能</p>
+                </div>
+
+                <!-- Tab 切换 -->
+                <div class="flex gap-2">
+                    <button
+                        @click="editType = 'full'"
+                        :class="editType === 'full' ? 'bg-ink text-white' : 'bg-stone/20 text-ink-light hover:bg-stone/40'"
+                        class="flex-1 py-3 rounded-lg font-bold text-xs uppercase tracking-widest transition-all"
+                    >
+                        全图修改
+                    </button>
+                    <button
+                        @click="editType = 'partial'; $nextTick(() => initCanvas())"
+                        :class="editType === 'partial' ? 'bg-ink text-white' : 'bg-stone/20 text-ink-light hover:bg-stone/40'"
+                        class="flex-1 py-3 rounded-lg font-bold text-xs uppercase tracking-widest transition-all"
+                    >
+                        局部修改
+                    </button>
+                </div>
+
+                <!-- 提示词输入 -->
+                <div>
+                    <label v-if="editType === 'partial'" class="block text-xs font-bold tracking-widest uppercase text-gold mb-2">
+                        请在左图圈出需要修改的部分
+                    </label>
+                    <label class="block text-xs font-bold tracking-widest uppercase text-gold mb-2" :class="editType === 'partial' ? 'mt-4' : ''">
+                        请输入修改要求：
+                    </label>
+                    <textarea
+                        v-model="editPrompt"
+                        rows="4"
+                        class="w-full bg-transparent border border-stone/50 rounded-lg px-4 py-3 text-ink placeholder-stone/80 focus:ring-1 focus:ring-gold/50 focus:border-gold outline-none font-serif resize-none"
+                        placeholder="例如：将背景改为深色调，增加产品光泽感..."
+                    ></textarea>
+                </div>
+
+                <!-- 参考图上传 -->
+                <div>
+                    <label class="block text-xs font-bold tracking-widest uppercase text-gold mb-2">
+                        您可以提供参考图（最多9张）：
+                    </label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div
+                            v-if="editReferenceImages.length < 9"
+                            @click="$refs.editFileInput.click()"
+                            class="aspect-square border border-dashed border-gold/40 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gold/5 transition-all group hover:border-gold"
+                        >
+                            <i class="fas fa-plus text-gold/30 group-hover:text-gold text-xl"></i>
+                            <input
+                                type="file"
+                                ref="editFileInput"
+                                @change="handleEditFileChange"
+                                accept="image/*"
+                                multiple
+                                class="hidden"
+                            >
+                        </div>
+                        <div
+                            v-for="(img, idx) in editReferenceImages"
+                            :key="img.id"
+                            class="relative group aspect-square"
+                        >
+                            <img :src="img.preview" class="w-full h-full object-cover rounded-lg">
+                            <button
+                                @click="editReferenceImages.splice(idx, 1)"
+                                class="absolute -top-2 -right-2 bg-ink text-white w-6 h-6 rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 hover:bg-red-500 transition-all shadow-lg"
+                            >
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 编辑进度 -->
+                <transition name="fade">
+                    <div v-if="isEditing" class="bg-gold/10 border border-gold/30 rounded-lg p-4">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-6 h-6 border-2 border-gold border-t-transparent rounded-full animate-spin"></div>
+                            <span class="text-sm text-gold font-serif">{{ editTaskMessage }}</span>
+                        </div>
+                        <div class="h-1 bg-stone/30 rounded-full overflow-hidden">
+                            <div
+                                class="h-full bg-gold transition-all duration-500"
+                                :style="{ width: editTaskProgress + '%' }"
+                            ></div>
+                        </div>
+                    </div>
+                </transition>
+
+                <!-- 确认修改按钮 -->
+                <button
+                    @click="confirmEdit"
+                    :disabled="!editPrompt || isEditing || (!testImage && posterVersions.length === 0)"
+                    :class="!editPrompt || isEditing || (!testImage && posterVersions.length === 0) ? 'bg-stone text-white cursor-not-allowed' : 'bg-ink text-white hover:bg-gold hover:shadow-glow active:scale-95'"
+                    class="w-full py-4 rounded-lg font-bold tracking-widest text-xs uppercase transition-all"
+                >
+                    {{ isEditing ? '生成中...' : '确认修改' }}
+                </button>
+
+                <!-- 下载按钮 -->
+                <button
+                    v-if="posterVersions.length > 0"
+                    @click="downloadCurrentVersion"
+                    class="w-full py-3 border border-stone rounded-lg font-bold tracking-widest text-xs uppercase text-ink hover:border-gold hover:text-gold transition-all"
+                >
+                    <i class="fas fa-download mr-2"></i>下载当前版本
+                </button>
+
+                <!-- 返回首页 -->
+                <a href="/" class="block text-center text-xs text-ink-light hover:text-gold transition-colors">
+                    <i class="fas fa-arrow-left mr-1"></i> 返回首页
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const { createApp } = Vue;
+    const API = '';
+
+    createApp({
+        data() {
+            return {
+                // 测试图片
+                testImage: null,
+                testImageUrl: '',
+
+                // 编辑相关
+                editType: 'full',
+                editPrompt: '',
+                editReferenceImages: [],
+                posterVersions: [],
+                currentVersionIndex: 0,
+                editTaskId: null,
+                editTaskProgress: 0,
+                editTaskMessage: '',
+                isEditing: false,
+                canvasHistory: [],
+                canvasRedoStack: [],
+                isDrawing: false,
+                brushSize: 50,
+                editPoll: null,
+
+                // 测试用的 ID
+                userId: 'test_' + Date.now(),
+                sessionId: 'session_test',
+                posterId: '00'
+            };
+        },
+        computed: {
+            currentImageUrl() {
+                if (this.posterVersions.length > 0) {
+                    return this.posterVersions[this.currentVersionIndex]?.full_url;
+                }
+                return this.testImageUrl;
+            }
+        },
+        methods: {
+            // 上传测试图片
+            handleTestImageUpload(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                this.testImage = file;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    this.testImageUrl = ev.target.result;
+                    // 创建初始版本
+                    this.posterVersions = [{
+                        version: 0,
+                        type: 'initial',
+                        thumbnail_url: ev.target.result,
+                        full_url: ev.target.result
+                    }];
+                };
+                reader.readAsDataURL(file);
+                e.target.value = '';
+            },
+
+            // 切换版本
+            switchVersion(index) {
+                this.currentVersionIndex = index;
+                this.clearCanvas();
+                this.$nextTick(() => this.initCanvas());
+            },
+
+            // 下载当前版本
+            async downloadCurrentVersion() {
+                const url = this.currentImageUrl;
+                if (!url) return;
+
+                try {
+                    const r = await fetch(url);
+                    const b = await r.blob();
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(b);
+                    a.download = `edited_v${this.posterVersions[this.currentVersionIndex]?.version || 0}.png`;
+                    a.click();
+                } catch (e) {
+                    alert('下载失败');
+                }
+            },
+
+            // 图片加载完成后初始化 Canvas
+            onImageLoaded() {
+                this.$nextTick(() => this.initCanvas());
+            },
+
+            // 初始化 Canvas
+            initCanvas() {
+                const canvas = this.$refs.editCanvas;
+                const img = this.$refs.editImage;
+                if (!canvas || !img) return;
+
+                canvas.width = img.clientWidth;
+                canvas.height = img.clientHeight;
+
+                const ctx = canvas.getContext('2d');
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            },
+
+            // 开始绘制
+            startDrawing(e) {
+                this.isDrawing = true;
+                const canvas = this.$refs.editCanvas;
+                const ctx = canvas.getContext('2d');
+
+                this.canvasHistory.push(canvas.toDataURL());
+                this.canvasRedoStack = [];
+
+                const rect = canvas.getBoundingClientRect();
+                ctx.beginPath();
+                ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            },
+
+            // 绘制中
+            draw(e) {
+                if (!this.isDrawing) return;
+                const canvas = this.$refs.editCanvas;
+                const ctx = canvas.getContext('2d');
+                const rect = canvas.getBoundingClientRect();
+
+                ctx.lineWidth = this.brushSize;
+                ctx.strokeStyle = 'rgba(198, 142, 93, 0.5)';
+                ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            },
+
+            // 停止绘制
+            stopDrawing() {
+                this.isDrawing = false;
+            },
+
+            // 撤销
+            undoCanvas() {
+                if (this.canvasHistory.length === 0) return;
+                const canvas = this.$refs.editCanvas;
+                const ctx = canvas.getContext('2d');
+
+                this.canvasRedoStack.push(canvas.toDataURL());
+
+                const prevState = this.canvasHistory.pop();
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = prevState;
+            },
+
+            // 重做
+            redoCanvas() {
+                if (this.canvasRedoStack.length === 0) return;
+                const canvas = this.$refs.editCanvas;
+                const ctx = canvas.getContext('2d');
+
+                this.canvasHistory.push(canvas.toDataURL());
+
+                const nextState = this.canvasRedoStack.pop();
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = nextState;
+            },
+
+            // 清空画布
+            clearCanvas() {
+                const canvas = this.$refs.editCanvas;
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.canvasHistory = [];
+                this.canvasRedoStack = [];
+            },
+
+            // 获取带涂抹标记的图片
+            getMarkedImage() {
+                const canvas = this.$refs.editCanvas;
+                const img = this.$refs.editImage;
+                if (!canvas || !img) return null;
+
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = img.naturalWidth;
+                tempCanvas.height = img.naturalHeight;
+                const ctx = tempCanvas.getContext('2d');
+
+                ctx.drawImage(img, 0, 0);
+
+                const scaleX = img.naturalWidth / canvas.width;
+                const scaleY = img.naturalHeight / canvas.height;
+                ctx.scale(scaleX, scaleY);
+                ctx.drawImage(canvas, 0, 0);
+
+                return tempCanvas.toDataURL('image/png');
+            },
+
+            // 处理参考图上传
+            handleEditFileChange(e) {
+                Array.from(e.target.files).slice(0, 9 - this.editReferenceImages.length).forEach(f => {
+                    const r = new FileReader();
+                    r.onload = ev => this.editReferenceImages.push({
+                        id: Date.now() + Math.random(),
+                        file: f,
+                        preview: ev.target.result
+                    });
+                    r.readAsDataURL(f);
+                });
+                e.target.value = '';
+            },
+
+            // 确认修改
+            async confirmEdit() {
+                if (!this.editPrompt || this.isEditing) return;
+
+                this.isEditing = true;
+                this.editTaskMessage = '准备中...';
+                this.editTaskProgress = 0;
+
+                try {
+                    let sourceImage;
+                    let originalImage = null;
+
+                    if (this.editType === 'partial') {
+                        // 局部修改：发送带标记图 + 原图
+                        sourceImage = this.getMarkedImage();
+                        originalImage = this.currentImageUrl;
+                    } else {
+                        // 全图修改：只发送原图
+                        sourceImage = this.currentImageUrl;
+                    }
+
+                    const referenceImage = this.editReferenceImages.length > 0
+                        ? this.editReferenceImages[0].preview
+                        : null;
+
+                    const response = await fetch(`${API}/api/edit/poster`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            user_id: this.userId,
+                            product_id: this.sessionId,
+                            poster_id: this.posterId,
+                            edit_type: this.editType,
+                            prompt: this.editPrompt,
+                            source_image: sourceImage,
+                            original_image: originalImage,
+                            reference_image: referenceImage,
+                            parent_version: this.posterVersions[this.currentVersionIndex]?.version
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.detail || '提交失败');
+                    }
+
+                    const data = await response.json();
+                    this.editTaskId = data.task_id;
+                    this.editTaskMessage = '正在生成...';
+
+                    this.editPoll = setInterval(() => this.checkEditTask(), 2000);
+
+                } catch (e) {
+                    alert('编辑失败: ' + e.message);
+                    this.isEditing = false;
+                }
+            },
+
+            // 检查编辑任务状态
+            async checkEditTask() {
+                if (!this.editTaskId) return;
+
+                try {
+                    const r = await fetch(`${API}/api/edit/task/${this.editTaskId}`);
+                    if (!r.ok) return;
+
+                    const task = await r.json();
+                    this.editTaskProgress = task.progress;
+                    this.editTaskMessage = task.message;
+
+                    if (task.status === 'completed') {
+                        clearInterval(this.editPoll);
+                        this.editPoll = null;
+                        this.isEditing = false;
+
+                        // 添加新版本到列表
+                        if (task.result_image_url) {
+                            this.posterVersions.push({
+                                version: task.result_version,
+                                type: this.editType === 'full' ? 'full_edit' : 'partial_edit',
+                                thumbnail_url: task.result_image_url,
+                                full_url: task.result_image_url
+                            });
+                            this.currentVersionIndex = this.posterVersions.length - 1;
+                        }
+
+                        this.editPrompt = '';
+                        this.editReferenceImages = [];
+                        this.clearCanvas();
+                    }
+
+                    if (task.status === 'failed') {
+                        clearInterval(this.editPoll);
+                        this.editPoll = null;
+                        this.isEditing = false;
+                        alert('编辑失败: ' + (task.error || '未知错误'));
+                    }
+                } catch (e) {
+                    console.error('检查任务状态失败', e);
+                }
+            }
+        }
+    }).mount('#app');
+    </script>
+</body>
+</html>
