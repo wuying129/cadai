@@ -24,13 +24,7 @@ class PosterEditor:
             api_key: API密钥（可选，默认使用PosterGenerator的配置）
             base_url: API基础URL（可选）
         """
-        # 只在有值时传递参数，否则让 PosterGenerator 使用默认值
-        kwargs = {}
-        if api_key is not None:
-            kwargs['api_key'] = api_key
-        if base_url is not None:
-            kwargs['base_url'] = base_url
-        self.generator = PosterGenerator(**kwargs)
+        self.generator = PosterGenerator(api_key=api_key, base_url=base_url)
 
     @staticmethod
     def decode_base64_image(base64_data: str, output_path: str) -> str:
@@ -73,19 +67,18 @@ class PosterEditor:
         self,
         source_image: str,  # base64 data URI 或文件路径
         prompt: str,
-        original_image: Optional[str] = None,  # 局部修改时的原图（无标记）
         reference_image: Optional[str] = None,  # base64 data URI 或文件路径
         output_dir: str = "./output",
         filename_prefix: str = "edited"
     ) -> dict:
         """
         编辑海报（全图修改或局部修改）
+        全图和局部修改使用相同的逻辑，只是输入图片不同
 
         Args:
-            source_image: 源图片（全图修改时为原图，局部修改时为带标记的图）
+            source_image: 源图片（全图修改时为原图，局部修改时为蒙版合并后的图）
                          可以是 base64 data URI 或文件路径
             prompt: 修改提示词
-            original_image: 局部修改时的原图（无标记），用于AI参考
             reference_image: 参考图片（可选），可以是 base64 data URI 或文件路径
             output_dir: 输出目录
             filename_prefix: 文件名前缀
@@ -100,7 +93,7 @@ class PosterEditor:
         temp_dir = tempfile.mkdtemp()
 
         try:
-            # 处理源图片（带标记的图或原图）
+            # 处理源图片
             if source_image.startswith("data:"):
                 source_path = self.decode_base64_image(
                     source_image,
@@ -108,17 +101,6 @@ class PosterEditor:
                 )
             else:
                 source_path = source_image
-
-            # 处理原图（局部修改时）
-            original_path = None
-            if original_image:
-                if original_image.startswith("data:"):
-                    original_path = self.decode_base64_image(
-                        original_image,
-                        os.path.join(temp_dir, "original")
-                    )
-                else:
-                    original_path = original_image
 
             # 处理参考图片
             reference_path = None
@@ -132,11 +114,7 @@ class PosterEditor:
                     reference_path = reference_image
 
             # 构建图片路径列表
-            # 局部修改时：[带标记图, 原图, 参考图]
-            # 全图修改时：[原图, 参考图]
             image_paths = [source_path]
-            if original_path:
-                image_paths.append(original_path)
             if reference_path:
                 image_paths.append(reference_path)
 

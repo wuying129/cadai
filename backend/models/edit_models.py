@@ -14,8 +14,7 @@ class EditRequest(BaseModel):
     poster_id: str
     edit_type: str  # "full" 或 "partial"
     prompt: str
-    source_image: str  # base64 data URI 或 URL（局部修改时为带标记的图）
-    original_image: Optional[str] = None  # 局部修改时的原图（无标记）
+    source_image: str  # base64 data URI 或 URL
     reference_image: Optional[str] = None  # base64 data URI 或 URL
     parent_version: Optional[int] = None
 

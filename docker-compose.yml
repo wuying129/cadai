@@ -6,8 +6,4 @@ services:
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
-    env_file:
-      - .env
-    environment:
-      - TZ=Asia/Shanghai
     restart: unless-stopped

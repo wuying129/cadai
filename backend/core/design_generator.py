@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # 从环境变量读取配置
-BASE_URL = os.getenv("API_BASE_URL", "https://ent2.zetatechs.com/v1")
+BASE_URL = os.getenv("API_BASE_URL", "https://ent.zetatechs.com/v1")
 API_KEY = os.getenv("API_KEY", "")
 MODEL_NAME = os.getenv("DESIGN_MODEL_NAME", "gemini-3-pro-preview-thinking")
 
