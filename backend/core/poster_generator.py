@@ -19,9 +19,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ==================== API 配置 ====================
-BASE_URL = os.getenv("API_BASE_URL", "https://ent.zetatechs.com/v1")
-API_KEY = os.getenv("API_KEY", "")
-MODEL_NAME = os.getenv("IMAGE_MODEL_NAME", "gemini-3-pro-image-preview-flatfee")
+BASE_URL = os.getenv("API_BASE_URL", "https://ent2.zetatechs.com/v1")
+API_KEY = os.getenv("API_KEY", "sk-dOimcyzTXBNIejz04zBsuPp38tKdsTox38eDVCwgGA1jM1ph")
+MODEL_NAME = os.getenv("IMAGE_MODEL_NAME", "gemini-3-pro-image-preview")
 
 
 class PosterGenerator:
